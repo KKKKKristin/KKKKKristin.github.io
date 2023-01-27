@@ -9,7 +9,7 @@
 
     <style type="text/css">
       
-         /* for the hyperlinks in catalog */
+        /* for the hyperlinks in catalog */
 
         a {
             color: rgba(0, 0, 0, 0.512);
@@ -45,10 +45,10 @@
             vertical-align: top;
         }
 
-        
+
         /* for the copyright */
         .privacy {
-            
+
             text-align: center;
             font: italic 400 7px 'Georgia';
             font-style: italic;
@@ -60,8 +60,8 @@
             color: rgba(0, 0, 0, 0.92);
         }
 
-         /* two big div box1 and box2 to put the image(top and botttom) */
-        
+        /* two big div box1 and box2 to put the image(top and botttom) */
+
         .box1 {
             width: 540px;
             height: 268px;
@@ -69,7 +69,7 @@
             margin-bottom: 1.8px;
             margin-left: auto;
             margin-right: auto;
-            
+
 
         }
 
@@ -80,18 +80,19 @@
             margin-bottom: 22px;
             margin-left: auto;
             margin-right: auto;
-            
+
 
         }
-        
+
         /* in two boxs the left image put into left, right one into right */
-        
+
+
         .left {
             float: left;
             width: 266px;
             height: 266px;
             margin-right: 2px;
-           
+
 
         }
 
@@ -100,46 +101,92 @@
             width: 266px;
             height: 266px;
             margin-left: 2px;
-            
-    
 
         }
 
-         /* for the icons facebook...etc */
+        .crop1 {
+            
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-image: url(https://csci571.com/hw/hw3/images/pier.jpg);
+            width: 265px;
+            height: 265px;
+            text-align: center;
 
-        .icon{
+        }
+        .crop2 {
+            
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-image: url(https://csci571.com/hw/hw3/images/road.jpg);
+            width: 265px;
+            height: 265px;
+            text-align: center;
+
+        }
+        .crop3 {
+            
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-image: url(https://csci571.com/hw/hw3/images/lake.jpg);
+            width: 265px;
+            height: 265px;
+            text-align: center;
+
+        }
+        .crop4 {
+            
+            display: block;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            background-image: url(https://csci571.com/hw/hw3/images/mountain.jpg);
+            width: 265px;
+            height: 265px;
+            text-align: center;
+
+        }
+
+        /* for the icons facebook...etc */
+
+        .icon {
             width: 120px;
             height: 16px;
-            margin:0 auto;
+            margin: 0 auto;
             margin-top: 16px;
-            margin-bottom:30px;
+            margin-bottom: 30px;
         }
 
-        .face{
+        .face {
             width: 16px;
-            height:16px;
+            height: 16px;
             float: left;
-            margin-left:24px ;
+            margin-left: 24px;
             margin-right: 6px;
 
         }
 
-        .twi{
+        .twi {
             width: 16px;
-            height:16px;
+            height: 16px;
             float: left;
-            margin-left:6px ;
+            margin-left: 6px;
             margin-right: 6px;
         }
 
-        .ins{
+        .ins {
             width: 16px;
-            height:16px;
+            height: 16px;
             float: left;
-            margin-left:6px ;
+            margin-left: 6px;
             margin-right: 10px;
         }
-
     </style>
 </head>
 
@@ -147,10 +194,11 @@
 
     <!-- leave some space from top to my title -->
     <div>&nbsp</div>
-    
+
     <!-- for title"james jantz" and the catalog -->
 
-    <table frame="box" style="border:1px solid rgba(0, 0, 0, 0.706);margin-left:auto;margin-right:auto; width: 473px;height: 90px;">
+    <table frame="box"
+        style="border:1px solid rgba(0, 0, 0, 0.706);margin-left:auto;margin-right:auto; width: 473px;height: 90px;">
         <tr>
             <td>
                 <table frame="box"
@@ -162,7 +210,7 @@
                         <th>
 
                             James&nbspJantz
-                           
+
                         </th>
 
 
@@ -170,8 +218,8 @@
                     </tr>
                 </table>
 
-        <!-- catalog:home nature .... etc -->
-                
+                <!-- catalog:home nature .... etc -->
+
                 <table frame="box"
                     style="border:0px solid black;margin-left:auto;margin-right:auto; width: 472px ; height: 25px; ">
 
@@ -206,43 +254,43 @@
 
     <div class="box1">
         <div class="left">
-            
-            <img src="https://csci571.com/hw/hw3/images/pier.jpg" width="265" height="265">
 
-           
+            <!-- <div class="crop1" src="https://csci571.com/hw/hw3/images/pier.jpg" width="265" height="265"> -->
+            <div class="crop1"></div>
+
         </div>
 
-       <div class="right">
-       <img src="https://csci571.com/hw/hw3/images/road.jpg" width="265" height="265">
-
-       </div>
+        <div class="right">
+            <!-- <div class="crop2" src="https://csci571.com/hw/hw3/images/road.jpg" width="265" height="265"> -->
+            <div class="crop2"></div>
+        </div>
     </div>
-   
+
 
     <div class="box2">
         <div class="left">
-            <img src="https://csci571.com/hw/hw3/images/lake.jpg" width="265" height="265">
-           
+            <!-- <div class="crop3" src="https://csci571.com/hw/hw3/images/lake.jpg" width="265" height="265"> -->
+            <div class="crop3"></div>
         </div>
 
-       <div class="right">
-       
-        <img src="https://csci571.com/hw/hw3/images/mountain.jpg" width="265" height="265">
+        <div class="right">
 
-       </div>
+            <!-- <div class="crop4" src="https://csci571.com/hw/hw3/images/mountain.jpg" width="265" height="265"> -->
+            <div class="crop4"></div>
+        </div>
     </div>
 
 
 
 
-<!-- copyright -->
+    <!-- copyright -->
     <p class="privacy">@2023 by James Jantz</p>
 
-<!--icons  -->
+    <!--icons  -->
     <div class="icon">
-        <div class="face"><img src="https://csci571.com/hw/hw3/images/facebook.png"   width="15" height="15"/></div>
-        <div class="twi"><img src="https://csci571.com/hw/hw3/images/twitter.png" width="15" height="15"/></div>
-        <div class="ins"> <img src="https://csci571.com/hw/hw3/images/instagram.png" width="15" height="15"/></div>
+        <div class="face"><img src="https://csci571.com/hw/hw3/images/facebook.png" width="15" height="15" /></div>
+        <div class="twi"><img src="https://csci571.com/hw/hw3/images/twitter.png" width="15" height="15" /></div>
+        <div class="ins"> <img src="https://csci571.com/hw/hw3/images/instagram.png" width="15" height="15" /></div>
     </div>
 
 

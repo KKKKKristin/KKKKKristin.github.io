@@ -1,37 +1,131 @@
-# Copyright 2018 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+from flask import Flask, request, jsonify
+import requests
+from geolib import geohash
 
-# [START gae_python38_app]
-# [START gae_python3_app]
-from flask import Flask
-
-
-# If `entrypoint` is not defined in app.yaml, App Engine will look for an app
-# called `app` in `main.py`.
 app = Flask(__name__)
+
+# 定义Ticketmaster API密钥
+TM_API_KEY = 'AzXDl3G5mMF367WR2AgZok1yYIIcdlsR'
+# define geocoding key(google cloud platform api)
+GOOGLE_GEOCODING_KEY = 'AIzaSyBIOiZOjHy7QFvCNF4qTtHRxMPdAkx2kmA'
+
+
+#ipinfo_api = 'AIzaSyBIOiZOjHy7QFvCNF4qTtHRxMPdAkx2kmA'
+
+@app.route("/ip_api/<address>", methods=['GET'])
+def getloc(address):
+    url = 'https://maps.googleapis.com/maps/api/geocode/json?address='+address+'&key=AIzaSyBIOiZOjHy7QFvCNF4qTtHRxMPdAkx2kmA'
+    request = requests.get(url);
+    return jsonify({'loc':request.json()})
+
+
+
+
+# Define endpoint for handling search requests
+@app.route("/search", methods=['GET'])
+def search():
+    # Get query parameters from request
+    segment_Id = {"default": "", "music": "KZFzniwnSyZfZ7v7nJ", "sports": "KZFzniwnSyZfZ7v7nE",
+                      "artstheatre": "KZFzniwnSyZfZ7v7na", "film": "KZFzniwnSyZfZ7v7nn",
+                      "miscellaneous": "KZFzniwnSyZfZ7v7n1"}
+
+    event = request.args.get("event")
+    distance = request.args.get("distance")
+    lat = request.args.get("latitude")
+    lon = request.args.get("longitude")
+
+    category = request.args.get("category")
+    #address = request.args.get("address")
+    segmentId = segment_Id[category]
+    
+    # 使用geohash将经纬度转换为geohash字符串
+    geohash_code = geohash.encode(float(lat), float(lon), precision=7)
+
+   
+
+    # 调用Ticketmaster API进行搜索
+    tm_url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey='+TM_API_KEY+'&keyword='+event+'&segementId'+segmentId +'&radius='+distance+'&unit=miles'+'&geoPoint='+geohash_code
+   
+    #header = {'Content-Type': 'application/json'}
+
+    tm_response = requests.get(tm_url) #, params=tm_params
+    if tm_response.status_code != 200:
+        return jsonify({'error': 'Failed to search events'})
+    tm_data = tm_response.json()
+
+    # Extract relevant fields from response
+    events = tm_data['_embedded']['events']
+    results = []
+    for event in events:
+        event_data = {
+            
+            # table
+            'date': event['dates']['start']['localDate'],
+            'date_time': event['dates']['start']['localTime'],
+            'icon': event['images'][0]['url'],
+            'event': event['name'],
+            'genre': event['classifications'][0]['genre']['name'],
+            'venue': event['_embedded']['venues'][0]['name'],
+            'id': event['id']
+           
+        }
+        results.append(event_data)
+ 
+    return jsonify(results)  
+   
+
+
+@app.route("/event_detail", methods=['GET'])
+def eventDetail():
+
+
+    id = request.args.get("eventId")
+    print('event id'+ id)
+
+    event_url = 'https://app.ticketmaster.com/discovery/v2/events/'+id+'.json?apikey='+TM_API_KEY
+
+    event_response = requests.get(event_url)
+
+    if event_response.status_code != 200:
+        return jsonify({'error': 'sorry, Failed to search events'})
+    event_data = event_response.json()
+   
+
+    return jsonify(event_data)
+
+
+@app.route("/venue_detail", methods=['GET'])
+def venueDetail():
+
+    venue = request.args.get("venue")
+    print('venue ='+ venue)
+
+    venue_url = 'https://app.ticketmaster.com/discovery/v2/venues.json?keyword='+venue+'&apikey='+TM_API_KEY
+
+    venue_response = requests.get(venue_url)
+
+    if venue_response.status_code != 200:
+        return jsonify({'error': 'sorry, Failed to search events'})
+    venue_data = venue_response.json()
+   
+
+    return jsonify(venue_data)
+ 
+
+ 
 
 
 @app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
-
-
+def homepage():
+    return app.send_static_file("event.html")
 if __name__ == '__main__':
-    # This is used when running locally only. When deploying to Google App
-    # Engine, a webserver process such as Gunicorn will serve the app. You
-    # can configure startup instructions by adding `entrypoint` to app.yaml.
     app.run(host='127.0.0.1', port=8080, debug=True)
-# [END gae_python3_app]
-# [END gae_python38_app]
+
+
+
+
+
+
+
+
+

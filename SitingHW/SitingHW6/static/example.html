@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cs571-hw2</title>
+    <meta name="description" content="this is cs571 homework2" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    
+    <div class="container1">
+        <h1 class="header">Events Search</h1>
+        <HR class="line1"></HR>
+        <form id="form1">
+            <div class="container1-1">
+                <label class="label1" for="mykeyword">Keyword</label>
+                <br>
+                <input class="input1" type="text" maxlength="100" name="Keyword" id="mykeyword" required>
+            </div>
+
+            <div class="container1-2">
+                <div class="container1-3">
+                    <label class="label2" for="mydistance">Distance(miles)</label>
+                    <br>
+                    <input class="input2" type="text" name="Distance" id="mydistance" value="10" onmousemove="onChange()" onmouseleave="onChange1()">
+                </div>
+                
+
+                <div class="container1-4">
+                    <label class="label3" for="mycategory">Category</label>
+                    <br>
+                    <select class="selector" name="Category" id="mycategory">
+                        <option value="default"> Default</option>
+                        <option value="music"> Music</option>
+                        <option value="sports"> Sports</option>
+                        <option value="artstheatre"> Arts & Theatre</option>
+                        <option value="film"> Film</option>
+                        <option value="miscellaneous"> Miscellaneous</option>
+                    </select> 
+                </div>
+            </div>
+
+            <div class="container1-5">
+                <label class="label4" for="mylocation">Location</label>
+                <input type="checkbox" name="Location" id="mylocation" onclick="myHide()">
+                <label class="label5" for="mylocation1">Auto-Detect Location</label>
+                <br>
+                <input class="input1" type="text" name="Location" id="mylocation1" required>
+            </div>
+
+            <div class="container1-6">
+                <button type="button" class="button1" onclick="search()">SEARCH</button>
+                <button type="button" class="button2" onclick="clearall()">CLEAR</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="tab1" class="tab1">
+
+    </div>
+
+    <div id="events_detail" class="events_detail">
+
+    </div>
+
+    <div id="buttonOfvenue" class="buttonOfvenue">
+
+    </div>
+
+    <div id="venue_detail">
+
+    </div>
+
+</body>
+<script src="/static/app.js"></script>
+</html>

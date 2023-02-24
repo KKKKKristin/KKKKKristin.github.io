@@ -227,7 +227,7 @@ function displaySearchResults(results) {
 //onclick='searchEventDetail(\'${eventId}\')'
    
 //table += `<tr><div class="inline-input" ><td><div> + date+"\n"+ time + '</div></td><td><div><img height="80px" width="auto" src=' + icon +' /></div></td><td><div id="cell" onclick="searchEventDetail(\'${eventId}\')">' + event + '</div></td><td><div>' + genre + '</div></td><td><div>' + venue + '</div></td></div></tr>`;
-     table += `<tr><div class="inline-input"><td><div>` + date+'\n'+time + `</div></td><td><div><img height="80px" width="auto" src=` + icon +` /></div></td><td ><div id="cell" onclick="searchEventDetail(\'${eventId}\');">` + event + `</div></td><td><div>` + genre + `</div></td><td><div>` + venue + `</div></td></div></tr>`;
+     table += `<tr><div class="inline-input"><td><div>` + date+'\n'+time + `</div></td><td><div><img height="80px" width="auto" src=` + icon +` /></div></td><td class="event_hover" ><div id="cell"  onclick="searchEventDetail(\'${eventId}\');">` + event + `</div></td><td><div>` + genre + `</div></td><td><div>` + venue + `</div></td></div></tr>`;
 
 
      //var eventButton = document.getElementById("cell");
@@ -404,10 +404,13 @@ function displayEventDetails(result) {
           var artist_team = result._embedded.attractions[0].name ;
           var artist_team_url =  result._embedded.attractions[0].url ;
           var Artist_Team = "Artist/Team";
+          var exist_art = "exist";
         }else {
           var artist_team = '';
           var artist_team_url =  '';
           var Artist_Team = '';
+          var exist_art = '';
+
         }
 
         if(typeof result._embedded.venues !== "undefined"){
@@ -492,44 +495,48 @@ function displayEventDetails(result) {
 
         if(typeof result.priceRanges !== "undefined"){
           var priceRanges = priceRanges_min+" - "+priceRanges_max;
-          var PriceRanges = "Price"+" "+"Ranges"
+          var PriceRanges = "Price Ranges";
+          var exist_price="exist";
 
         }else{
           var priceRanges = '';
-          var PriceRanges = '';    
+          var PriceRanges = ''; 
+          var exist_price = '';  
         }
 
-        if(typeof result.dates.status.code !== "undefined"){
+        if(typeof result.dates.status.code == "undefined"){
          // var ticketStatus = result.dates.status.code;
-          var TicketStatus = "Ticket"+" "+"Status";
+         var ticketStatus = '';
+         var TicketStatus = '';
+         var className = '';
 
-            if(result.dates.status.code == "onsale"){
-              var ticketStatus = "On Sale";
-              ticketStatus.className = "onsale";
-            }else
-
-            if(result.dates.status.code == "rescheduled"){
-              var ticketStatus = "Rescheduled";
-              ticketStatus.className = "rescheduled";
-            }else
-
-            if(result.dates.status.code == "offsale"){
-              var ticketStatus = "Off sale";
-              ticketStatus.className = "offsale";
-            }else
-            if(result.dates.status.code == "canceled"){
-              var ticketStatus = "Canceled";
-              ticketStatus.className = "canceled";
-            }else
-            if(result.dates.status.code == "postponed"){
-              var ticketStatus = "Postponed";
-              ticketStatus.className = "postponed";
-            }
-
-
+         
         }else{
-          var ticketStatus = '';
-          var TicketStatus = '';
+          
+          
+
+          if(result.dates.status.code == "onsale"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "On Sale";
+            var className = "onsale";
+          }else if(result.dates.status.code == "rescheduled"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "Rescheduled";
+            var className = "rescheduled";
+          }else if(result.dates.status.code == "offsale"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "Off sale";
+            var className = "offsale";
+          }else if(result.dates.status.code == "canceled"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "Canceled";
+            var className = "canceled";
+          }else if(result.dates.status.code == "postponed"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "Postponed";
+            var className = "postponed";
+          }
+         
       
         }
 
@@ -559,7 +566,8 @@ function displayEventDetails(result) {
         // display event detail        
  var eventDetailResults = 
 
-           `<div class="event_head">`+eventName+`</div>
+           `<div class="eventDetail_window">
+           <div class="event_head" >`+eventName+`</div>
           
            <div class="inline-input" >
             <div class="div_left">
@@ -569,8 +577,8 @@ function displayEventDetails(result) {
                 </div>
                 
                 <div>
-                <div><h4>`+Artist_Team+`</h4></div>
-                <div><p class="link"><a href=" ` +artist_team_url+ ` " target="_blank">`+artist_team+`</a></p></div>
+                <div class=`+exist_art+`><h4>`+Artist_Team+`</h4></div>
+                <div><a href=" ` +artist_team_url+ ` " target="_blank" class="hover">`+artist_team+`</a></div>
                 
                 </div>
 
@@ -585,30 +593,47 @@ function displayEventDetails(result) {
               </div>
 
               <div>
-                <div><h4>`+PriceRanges+`</h4></div>
+                <div class=`+exist_price+`><h4>`+PriceRanges+`</h4></div>
                 <div><p>`+ priceRanges+`</p></div>
               </div>
 
               <div>
                 <div><h4>`+TicketStatus+`</h4></div>
-                <div><p>`+ticketStatus+`</p></div>
+                <div><p class=`+className+`>`+ticketStatus+`</p></div>
               </div>
 
               <div>
-                // <div><h4>`+BuyTicketAt+`<h4></div>
-                <div><p class="link"><a href=" ` +buyTicket_at+ ` " target="_blank">Ticketmaster</a></p></div>
+                 <div><h4>`+BuyTicketAt+`<h4></div>
+                <div><a href=" ` +buyTicket_at+ ` " target="_blank" class="hover">Ticketmaster</a></div>
               </div>
             </div>
 
             <div class="div_right">
-              <div class="event_img"><img src=" ` +seatMap+ ` " height="200px" width="auto"/></div>
+              <div class="event_img"><img src=" ` +seatMap+ ` " height="320" width="350"/></div>
             </div>
-          
+        
+          </div>
           </div>`;
         
+    
+
+
         document.getElementById("eventDetailResults").innerHTML = eventDetailResults;
 
-      
+            // 获取所有的 <p> 和 <h> 元素
+            var elements = document.querySelectorAll('p, h1, h2, h3, h4');
+
+            // 循环遍历每个元素
+            for (var i = 0; i < elements.length; i++) {
+              var element = elements[i];
+        
+            // 判断元素内容是否为空
+              if (element.innerHTML.trim() === '') {
+          
+            // 如果内容为空，则删除元素
+             element.parentNode.removeChild(element);
+             }
+            }
 
        //add show venue detail notice
     const venueDetailNotice = document.createElement("div");
@@ -620,10 +645,11 @@ function displayEventDetails(result) {
     // Set the styles for the arrow box
     arrow.style.width = "20px";
     arrow.style.height = "20px";
-    arrow.style.border = "1px solid black";
+    arrow.style.border = "1px solid white";
     arrow.style.borderTop = "none";
     arrow.style.borderLeft = "none";
     arrow.style.transform = "rotate(45deg)";
+    
 
   // Add the arrow  to the document body
 
@@ -655,12 +681,13 @@ function searchVenueDetails(venue, venueDetailNotice, arrow){
     var response = JSON.parse(this.responseText);
    // jsonEvent = response;
     console.log(response);
+     //hide the two div elements
+     venueDetailNotice.remove();
+     arrow.remove();
     displayVenueDetails(response);
     //scroll to expand, and we add class="expanded" in the div
     scrollToBottom();
-    //hide the two div elements
-    venueDetailNotice.remove();
-    arrow.remove();
+   
    
   } else {
     console.log("sorry, search venue detail request failed. returned status of: " + xhr.status);
@@ -728,9 +755,9 @@ function displayVenueDetails(result){
    //display venue details in webpage
   var venueDetail=
 
-  `<div><h3 class="venue_name">`+venueName+`</h3></div>
+  `<div class="venue_detail_window"><div class="black-border"><div><h3 class="venue_name">`+venueName+`</h3></div>
    
- <div>&nbsp</div>
+
    
 <div class="inline-input" id="parent">
 
@@ -738,20 +765,23 @@ function displayVenueDetails(result){
   <div class="child_left">
 
     <div class="inline-input" id="top">
-      <div class="address_head">Address</div>
-      <div class="address_data"><p class="address">`+address+'\n'+city+", "+stateCode+'\n'+postalCode+`</div>
+      <div class="address_head">Address:</div>
+      <div class="address_data"><p class="address">`+address+`<br>`+city+", "+stateCode+`<br>`+postalCode+`</div>
     </div>
 
-    <div id="bottom"><a href=" `+map_url+ ` " target="_blank">Open in Google Maps</a></div>
+    <div id="bottom"><a href=" `+map_url+ ` " target="_blank" class="hover">Open in Google Maps</a></div>
 
   </div>
 
+  <div class="divided"></div>
 
      <div class="child_right">
-      <div class="upcoming"><a href=" ` +upcomingEvents+ ` " target="_blank">`+upcoming_msg+`</a></div>
+      <div class="upcoming"><a href=" ` +upcomingEvents+ ` " target="_blank" class="hover">`+upcoming_msg+`</a></div>
       
     </div>
   
+</div>
+</div>
 </div>`;
 
 document.getElementById("showVenueDetail").innerHTML = venueDetail;

@@ -21,53 +21,56 @@ TM_API_KEY = 'AzXDl3G5mMF367WR2AgZok1yYIIcdlsR'
 
 //check if the input boxes are not filled
 
-// const searchButton = document.getElementById("searchButton");
-// const keywordInput = document.getElementById("eventInput");
-// const locationInput = document.getElementById("addressInput");
-// const keywordError = document.getElementById("keywordError");
-// const locationError = document.getElementById("locationError");
+const searchButton = document.getElementById("searchButton");
+const keywordInput = document.getElementById("eventInput");
+const locationInput = document.getElementById("addressInput");
+const keywordError = document.getElementById("keywordError");
+const locationError = document.getElementById("locationError");
 
-//   searchButton.addEventListener('click', function(event) {
-//   if (!keywordInput.checkValidity()) {
-//     keywordError.style.display = 'block';
-//     event.preventDefault();
-//   } else {
-//     keywordError.style.display = 'none';
-//   }
+  searchButton.addEventListener('click', function(event) {
+  if (!keywordInput.checkValidity()) {
+    keywordInput.reportValidity();
+    return;
+  } else {
+      
+      searchEvents();
+  }
 
-//   if (!locationInput.checkValidity()) {
-//     locationError.style.display = 'block';
-//     event.preventDefault();
-//   } else {
-//     locationError.style.display = 'none';
-//   }
-// });
+  if (!locationInput.checkValidity()) {
+    locationInput.reportValidity();
+      return;
+        
+  } else {
+      
+      searchEvents();
+  }
+});
 
 
 
 //locationInput will disappear if checked
 
-// function toggleInput() {
-//     var checkbox = document.getElementById("checkbox");
-//     var locationInput = document.getElementById("addressInput");
-//     if (checkbox.checked) {
-//      locationInput.style.display = "none";
-//     } else {
-//       locationInput.style.display = "block";
-//     }
-//   }
+function toggleInput() {
+    var checkbox = document.getElementById("checkbox");
+    var locationInput = document.getElementById("addressInput");
+    if (checkbox.checked) {
+     locationInput.style.display = "none";
+    } else {
+      locationInput.style.display = "block";
+    }
+  }
 
   //clear button
-// function clearForm() {
-//     document.getElementById("eventInput").value = "";
-//     document.getElementById("distanceInput").value = "";
-//     document.getElementById("category").value = "";
-//     document.getElementById("addressInput").value = "";
-//   }
+function clearForm() {
+    document.getElementById("eventInput").value = "";
+    document.getElementById("distanceInput").value = "";
+    document.getElementById("category").value = "";
+    document.getElementById("addressInput").value = "";
+  }
 
 
-// Add event listener to search button, if clicked, search events
-document.getElementById("searchButton").addEventListener('click', searchEvents);
+// // Add event listener to search button, if clicked, search events
+// document.getElementById("searchButton").addEventListener('click', searchEvents);
 
 
 
@@ -183,10 +186,10 @@ function displaySearchResults(results) {
   document.getElementById("arrow").innerHTML = "";
   document.getElementById("showVenueDetail").innerHTML = "";
 
- // if(typeof results == "undefined"){
-  // document.getElementById("eventDetailResults").innerHTML = "No Records Found";
+ if(typeof results == "undefined"){
+  document.getElementById("noRecordsNotice").innerHTML = "No Records Found";
 
- // }else{
+ }else{
 
   // 创建HTML表格并填充搜索结果
   var table = "<table id='table'><tr><th>Date</th><th>Icon</th><th id='head_event'>Event</th><th id='head_genre' >Genre</th><th id='head_venue' >Venue</th></tr>";
@@ -255,7 +258,7 @@ function displaySearchResults(results) {
   headButtonGenre.onclick = renewTableForGenre;
   headButtonVenue.onclick = renewTableForVenue;
 
- 
+}
 
 }
  

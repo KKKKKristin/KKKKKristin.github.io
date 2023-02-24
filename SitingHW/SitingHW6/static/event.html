@@ -35,7 +35,7 @@
           <div id= "right" class="input-item">
             <label class="title_text" for="category">Category</label><label class="title_special" for="">*</label>
             <br />
-            <select name = "categories" id = "category"  style = "border-radius: 5px">
+            <select name = "categories" id = "category" placeholder="default" style = "border-radius: 5px">
               <option value = "default">Default</option>
               <option value = "music">Music</option>
               <option value = "sports">Sports</option>
@@ -46,10 +46,9 @@
           </div>
         
         </div>
-         <!-- onchange="toggleInput()" -->
         <div class="input-item">
           <label class="title_text" for="addressInput">Location</label><label class="title_special" for="">*</label>
-           &nbsp&nbsp<label class="autodetection"><input type="checkbox" name="" id="checkbox" > Auto-Detect Location</label>
+           &nbsp&nbsp<label class="autodetection"><input type="checkbox" name="" id="checkbox" onchange="toggleInput()"> Auto-Detect Location</label>
           <br/><div><input class="text-input" id="addressInput" name="address" type="text"  style="border-radius: 5px;" required></div>
             <div id="locationError" class="error-message"></div>
         </div>
@@ -62,7 +61,7 @@
           <div class="inline-input">
           
             <div class="input-item">
-              <button class="research" id="searchButton" type="button">RESEARCH</button>
+              <button class="research" id="searchButton" type="button" >RESEARCH</button>
               </div>
            
               <div class="input-item">
@@ -77,7 +76,7 @@
       </div>
     </form>
 
-    <div id="noRecordsNotice"></div>
+    <div type="text"><p id="noRecordsNotice"></p></div>
     
     <div id="searchResults"></div>
 

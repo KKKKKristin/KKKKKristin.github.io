@@ -66,7 +66,7 @@ function toggleInput() {
 function clearForm() {
     document.getElementById("eventInput").value = "";
     document.getElementById("distanceInput").value = "";
-    document.getElementById("category").value = "";
+    document.getElementById("category").value = "default";
     document.getElementById("addressInput").value = "";
   }
 
@@ -136,7 +136,7 @@ function AddressFromInput(){
          var longitude = response.loc.results[0].geometry.location.lng;
          //将经纬度发送到后台的Python脚本进行处理
         sendSearchRequest(latitude, longitude, distance, event, category);
-        console.log(response);
+        // console.log(response);
   
      
       }
@@ -161,12 +161,18 @@ function sendSearchRequest(latitude, longitude, distance, event, category) {
       // 解析JSON响应并显示结果
       var response = JSON.parse(this.responseText);
        jsonArray = response;
-       console.log(jsonArray);
+       console.log(response);
       
     
-       if(typeof jsonArray === "undefined" || typeof jsonArray._embedded === "undefined"){
+       if(typeof response === "undefined" || typeof response._embedded === "undefined"){
         document.getElementById("searchResults").innerHTML="";
         document.getElementById("noRecordsNotice").innerHTML = `<div class="no_records">No Records Found<div/>`;
+
+        document.getElementById("eventDetailResults").innerHTML = "";
+
+        document.getElementById("showVenueDetail_notice").innerHTML = "";
+        document.getElementById("arrow").innerHTML = "";
+        document.getElementById("showVenueDetail").innerHTML = "";
 
         document.querySelector("#noRecordsNotice").style.display = 'block';
         window.scrollTo({
@@ -176,7 +182,7 @@ function sendSearchRequest(latitude, longitude, distance, event, category) {
 
        } else{
         document.getElementById("noRecordsNotice").innerHTML = "";
-        displaySearchResults(jsonArray);
+        displaySearchResults(response);
         console.log("events are displayed!!!");
 
        }
@@ -211,8 +217,10 @@ function displaySearchResults(results) {
   // 创建HTML表格并填充搜索结果
   var table = `<table id='table'><tr><th>Date</th><th>Icon</th><th id='head_event'>Event</th><th id='head_genre' >Genre</th><th id='head_venue' >Venue</th></tr>`;
   
-  var events = results._embedded.events;
   
+  var events = results._embedded.events;
+
+  console.log(events);
   
   var len = events.length;
   if(len > 20){
@@ -254,11 +262,11 @@ function displaySearchResults(results) {
       var genre = events[i].classifications[0].genre.name;
     }
 
-    if(typeof events[i]._embedded === "undefined" || typeof events[i]._embedded.venue === "undefined"){
+    if(typeof events[i]._embedded === "undefined" || typeof events[i]._embedded.venues === "undefined"){
       var venue = "";
 
     }else{
-      var venue = events[i]._embedded.venue[0].name;
+      var venue = events[i]._embedded.venues[0].name;
 
     }
    
@@ -273,9 +281,7 @@ function displaySearchResults(results) {
    // var eventId = results[i].id; 
      var eventId = events[i].id; 
     
-     console.log(eventId);
      console.log(venue);
-     console.log(event);
 
 
     
@@ -325,18 +331,18 @@ function displaySearchResults(results) {
  //定义发送EVENT DETAIL的函数
 function searchEventDetail(eventId) {
   
+
   document.getElementById("showVenueDetail").innerHTML = "";
 
 
   // 使用XMLHttpRequest发送GET请求
     var xhr = new XMLHttpRequest();
-    console.log(eventId);
 
   xhr.onreadystatechange = function() {
     if (this.readyState === 4 && this.status === 200) {
       var response = JSON.parse(this.responseText);
       jsonEvent = response;
-      console.log(response);
+      // console.log(response);
       displayEventDetails(response);
       //scroll to bottom 
    
@@ -385,19 +391,21 @@ function clearTable(){
 
 function sort_event() {
     
+ const events = jsonArray._embedded.events;
+
     
   if (sort_incending_event == 1) {
     sort_incending_event = 0;
-    jsonArray.sort(function (a, b) {
-      return a.event.localeCompare(b.event);
+    events.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
     });
     // console.log('jsonArray+'+jsonArray);
     displaySearchResults(jsonArray);
     
   } else {
     sort_incending_event = 1;
-    jsonArray.sort(function (a, b) {
-      return b.event.localeCompare(a.event);
+    events.sort(function (a, b) {
+      return b.name.localeCompare(a.name);
     });
     // console.log('jsonArray+'+jsonArray);
     
@@ -407,43 +415,46 @@ function sort_event() {
 
 function sort_genre() {
     
+ const events = jsonArray._embedded.events;
+
     
   if (sort_incending_genre == 1) {
     sort_incending_genre = 0;
-    jsonArray.sort(function (a, b) {
-      return a.genre.localeCompare(b.genre);
+    events.sort(function (a, b) {
+      return a.classifications[0].genre.name.localeCompare(b.classifications[0].genre.name);
     });
     // console.log('jsonArray+'+jsonArray);
     displaySearchResults(jsonArray);
     
   } else {
     sort_incending_genre = 1;
-    jsonArray.sort(function (a, b) {
-      return b.genre.localeCompare(a.genre);
+    events.sort(function (a, b) {
+      return b.classifications[0].genre.name.localeCompare(a.classifications[0].genre.name);
     });
     // console.log('jsonArray+'+jsonArray);
     displaySearchResults(jsonArray);
   }
 }
 
+
 function sort_venue() {
-    
-    
+  
+ const events = jsonArray._embedded.events;
+
   if (sort_incending_venue == 1) {
     sort_incending_venue = 0;
-    jsonArray.sort(function (a, b) {
-      return a.venue.localeCompare(b.venue);
+    events.sort(function (a, b) {
+      return a._embedded.venues[0].name.localeCompare(b._embedded.venues[0].name);
     });
     // console.log('jsonArray+'+jsonArray);
     displaySearchResults(jsonArray);
     
   } else {
     sort_incending_venue = 1;
-    jsonArray.sort(function (a, b) {
-      return b.venue.localeCompare(a.venue);
+    events.sort(function (a, b) {
+      return b._embedded.venues[0].name.localeCompare(a._embedded.venues[0].name);
     });
     
-    // console.log('jsonArray+'+jsonArray);
     displaySearchResults(jsonArray);
   }
 }
@@ -452,8 +463,11 @@ function displayEventDetails(result) {
 
   document.getElementById("showVenueDetail_notice").innerHTML = "";
   document.getElementById("arrow").innerHTML = "";
+  document.getElementById("eventDetailResults").innerHTML = "";
+
  
-   
+  console.log(result); 
+
   // extract event detail elements
         var eventName = result.name;
 
@@ -728,19 +742,18 @@ function searchVenueDetails(venue, venueDetailNotice, arrow){
   
   //get request to google map api
   var xhr = new XMLHttpRequest();
-  console.log(venue);
+  // console.log(venue);
 
   xhr.onreadystatechange = function() {
   if (this.readyState === 4 && this.status === 200) {
     var response = JSON.parse(this.responseText);
    // jsonEvent = response;
-    console.log(response);
+    // console.log(response);
      //hide the two div elements
      venueDetailNotice.remove();
      arrow.remove();
     displayVenueDetails(response);
     //scroll to expand, and we add class="expanded" in the div
-    scrollToBottom();
    
    
   } else {

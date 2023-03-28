@@ -164,28 +164,28 @@ function sendSearchRequest(latitude, longitude, distance, event, category) {
        console.log(response);
       
     
-       if(typeof response === "undefined" || typeof response._embedded === "undefined"){
-        document.getElementById("searchResults").innerHTML="";
-        document.getElementById("noRecordsNotice").innerHTML = `<div class="no_records">No Records Found<div/>`;
+      //  if(typeof response === "undefined" || typeof response._embedded === "undefined"){
+      //   document.getElementById("searchResults").innerHTML="";
+      //   document.getElementById("noRecordsNotice").innerHTML = `<div class="no_records">No Records Found<div/>`;
 
-        document.getElementById("eventDetailResults").innerHTML = "";
+      //   document.getElementById("eventDetailResults").innerHTML = "";
 
-        document.getElementById("showVenueDetail_notice").innerHTML = "";
-        document.getElementById("arrow").innerHTML = "";
-        document.getElementById("showVenueDetail").innerHTML = "";
+      //   document.getElementById("showVenueDetail_notice").innerHTML = "";
+      //   document.getElementById("arrow").innerHTML = "";
+      //   document.getElementById("showVenueDetail").innerHTML = "";
 
-        document.querySelector("#noRecordsNotice").style.display = 'block';
-        window.scrollTo({
-        top: document.querySelector("#noRecordsNotice").offsetTop,
-        behavior: 'smooth'
-        });
+      //   document.querySelector("#noRecordsNotice").style.display = 'block';
+      //   window.scrollTo({
+      //   top: document.querySelector("#noRecordsNotice").offsetTop,
+      //   behavior: 'smooth'
+      //   });
 
-       } else{
-        document.getElementById("noRecordsNotice").innerHTML = "";
-        displaySearchResults(response);
-        console.log("events are displayed!!!");
+      //  } else{
+      //   document.getElementById("noRecordsNotice").innerHTML = "";
+      //   displaySearchResults(response);
+      //   console.log("events are displayed!!!");
 
-       }
+      //  }
 
  
     }else{

@@ -29,3 +29,17 @@
     border: 2px solid #000000;
   }
   
+  .btn#favorite{
+  
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+  
+}

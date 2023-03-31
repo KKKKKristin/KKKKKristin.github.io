@@ -17,13 +17,40 @@ const app = express();
 const bodyParser = require("body-parser");
 const querystring = require('querystring');
 const geohash = require('ngeohash');
+
+const SpotifyWebApi = require('spotify-web-api-node');
 //const fs = require('fs');
 let API_KEY = '3d6TMT9FEQ-Y93jPJTrPTFQXO1leS088w9e33d5xi40AX6_hQO8ht5Abu8Xv4ZqOngZ-mxx99mdjmLzj9LMIZkqYAkjkEDE4kGoWW2B-1KkUUM8O0sxQOoUn4EM5Y3Yx';
-//定义Ticketmaster API密钥
+//define Ticketmaster API key
 var TM_API_KEY = 'AzXDl3G5mMF367WR2AgZok1yYIIcdlsR'
 //define geocoding key(google cloud platform api)
-GOOGLE_GEOCODING_KEY = 'AIzaSyBIOiZOjHy7QFvCNF4qTtHRxMPdAkx2kmA'
+GOOGLE_GEOCODING_KEY = 'AIzaSyCNWAB2YD-iQQnV7ULpUopcC29QiXdhBOw'
+//define spotify api key
 
+var clientId = '8620c9cdbe594fb9931a885c205f4579',
+clientSecret = '15b4636c18b84a4ba6909dcc0b01fdb1';
+
+
+
+// Create the api object with the credentials
+var spotifyApi = new SpotifyWebApi({
+  clientId: clientId,
+  clientSecret: clientSecret
+});
+
+// Retrieve an access token.
+spotifyApi.clientCredentialsGrant().then(
+  function(data) {
+    console.log('The access token expires in ' + data.body['expires_in']);
+    console.log('The access token is ' + data.body['access_token']);
+
+    // Save the access token so that it's used in future calls
+    spotifyApi.setAccessToken(data.body['access_token']);
+  },
+  function(err) {
+    console.log('Something went wrong when retrieving an access token', err);
+  }
+);
 
 
 let API_HOST = 'api.yelp.com';
@@ -119,7 +146,7 @@ app.get('/getTable', (req, res) => {
 
     console.log("auto param= "+params);
 
-    const geocode = geohash.encode(lat, lng, precision=7);
+    const geocode = geohash.encode(params.latitude, params.longitude, precision=7);
     console.log("geocode1:"+geocode); 
 
     // ticketmaster search
@@ -128,17 +155,11 @@ app.get('/getTable', (req, res) => {
     axios.get(url)
       .then((response) => {
         console.log(response.data);
-        const events = response.data._embedded.events.map(event => ({
-          name: event.name,
-          date: event.dates.start.localDate,
-          time: event.dates.start.localTime,
-          venue: event._embedded.venues[0].name,
-          imageUrl: event.images[0].url,
-          url: event.url
-        }));
 
-        res.send(JSON.stringify(events));
-        // res.send(response.data.businesses);
+        res.header("Access-Control-Allow-Origin","*");
+
+   
+        res.send(response.data);
 
          console.log("auto detection");
       }) 
@@ -151,8 +172,10 @@ app.get('/getTable', (req, res) => {
     let loc_url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + location + '&key=AIzaSyBIOiZOjHy7QFvCNF4qTtHRxMPdAkx2kmA';
     // console.log(loc_url);
     axios.get(loc_url)
-      .then((response) => {lat = response.loc.results[0].geometry.location.lat;
-        response.loc.results[0].geometry.location.lng; console.log("address is translated to lat and lng!");
+      .then((response) => {
+        console.log(response.data);
+        lat = response.data.results[0].geometry.location.lat;
+        lng=response.data.results[0].geometry.location.lng; console.log("address is translated to lat and lng!");
       let params = {
         keyword: keyword,
         latitude: lat,
@@ -165,7 +188,7 @@ app.get('/getTable', (req, res) => {
 
       console.log("un-auto param= "+params);
 
-      const geocode = geohash.encode(latitude, longitude, precision=7);
+      const geocode = geohash.encode(params.latitude, params.longitude, precision=7);
       console.log("geocode2"+geocode); 
 
       var url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey='+TM_API_KEY+'&keyword='+keyword+'&segementId'+segmentId +'&radius='+distance+'&unit=miles'+'&geoPoint='+geocode;
@@ -174,22 +197,28 @@ app.get('/getTable', (req, res) => {
       // console.log(HEADERS);
       axios.get(url)
       .then((response) => {
-        const events = response.data._embedded.events.map(event => ({
-          name: event.name,
-          date: event.dates.start.localDate,
-          time: event.dates.start.localTime,
-          venue: event._embedded.venues[0].name,
-          imageUrl: event.images[0].url,
-          url: event.url
-        }));
+        // const events = response.data._embedded.events.map(event => ({
+        //   name: event.name,
+        //   date: event.dates.start.localDate,
+        //   time: event.dates.start.localTime,
+        //   venue: event._embedded.venues[0].name,
+        //   imageUrl: event.images[0].url,
+        //   url: event.url
+        // }));
 
         res.header("Access-Control-Allow-Origin","*");
 
+        console.log(response.data);
+   
+        res.send(response.data);
 
-        res.json(events);
+        console.log("manual location");
+        // res.send(JSON.stringify(events));
+
+        // res.json(events);
         // res.send(response.data.businesses);
 
-         console.log("auto detection");
+        
       }) 
       .catch(error => {
         console.error(error);
@@ -212,35 +241,91 @@ app.get("/autoComplete", function(req, res) {
       // console.log(response.data.businesses[0].location.display_address);
       //console.log(response.data.businesses);
       // console.log(response.data);
-      response.data.categories.map((item) => {delete item.alias; item['text'] = item.title; delete item.title;});
-      
+      // response.data.categories.map((item) => {delete item.alias; item['text'] = item.title; delete item.title;});
+      const events = response.data._embedded.events.map(event => ({
+        name: event.name,
+        date: event.dates.start.localDate,
+        time: event.dates.start.localTime,
+        venue: event._embedded.venues[0].name,
+        imageUrl: event.images[0].url,
+        url: event.url
+      }));
       res.header("Access-Control-Allow-Origin","*");
       
       //console.log(response.data.terms.concat(response.data.categories));
-      res.send(response.data.terms.concat(response.data.categories));
+      // res.send(response.data.terms.concat(response.data.categories));
+
+      // res.send(JSON.stringify(events).data._embedded.events.concat(JSON.stringify(events)._embedded.events.event.name));
+      res.send(JSON.stringify(events));
+
     })
 
 
 });
 
-app.get("/card", function(req, res) {
-  let id = req.query.id;
-  var card_url = 'https://' + API_HOST + BUSINESS_PATH1 + id;
-  axios.get(card_url)
-    .then((response) => {
+app.get("/getSpotify", function(req, res) {
+  // let id = req.query.id;
+  console.log(req.query);
+  let spotifyKeyword = req.query.attraction;
 
-      // console.log(response.data.businesses[0].categories);
-      // console.log(response.data.businesses[0].location.display_address);
-      //console.log(response.data.businesses);
 
-      // console.log(response.data.photos);
-      res.send(response.data.photos);
-    })
-    .catch(function(error) {
-      console.log(error);
+    axios.get('https://api.spotify.com/v1/search?', {
+      headers: {
+       'Authorization': 'Bearer ' + spotifyApi.getAccessToken()
+      },
+      params: {
+        q: spotifyKeyword,
+        type: 'artist'
+      }
+    }).then(response => {
+    // Process the artist data
+      console.log(response.data);
+      res.send(response.data);
+
+    }).catch(error => {
+      console.error(error);
     });
 
+
 });
+
+app.get("/getAlbum", function(req, res) {
+  let artistId = req.query.artistId;
+
+  console.log("artistId = :"+artistId)
+  // axios.get('https://api.spotify.com/v1/search?', {
+  //   headers: {
+  //     'Authorization': 'Bearer ' + spotifyApi.getAccessToken()
+  //   },
+  //   params: {
+  //     q: spotifyKeyword,
+  //     type: 'artist'
+  //   }
+  // }).then(response => {
+   
+
+    axios.get(`https://api.spotify.com/v1/artists/${artistId}/albums`, {
+      headers: {
+        'Authorization': 'Bearer ' + spotifyApi.getAccessToken()
+      },
+      params: {
+        limit: 3
+      }
+    }).then(response => {
+      // Process the album data
+      console.log(response.data);
+      let albums = response.data.items;
+      let albumCovers = albums.map(album => album.images[0].url);
+      res.send(albumCovers);
+    }).catch(error => {
+      console.error(error);
+    });
+
+  // }).catch(error => {
+  //   console.error(error);
+  // });
+});
+
 
 app.get("/review", function(req, res) {
   let id = req.query.id;

@@ -838,7 +838,7 @@ function displayVenueDetails(result){
       <div class="address_data"><p class="address">`+address+`<br>`+city+", "+stateCode+`<br>`+postalCode+`</div>
     </div>
 
-    <div id="bottom"><a href=" `+map_url+ ` " target="_blank" class="hover">Open in Google Maps</a></div>
+    <div id="bottom"><a href=" `+"https://www.google.com/maps/search/?api=1&query="+address+"%2C"+city+"%2C"+stateCode+"%2C"+postalCode+ ` " target="_blank" class="hover">Open in Google Maps</a></div>
 
   </div>
 

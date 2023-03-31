@@ -34,6 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
 // import {RoundProgressModule} from 'angular-svg-round-progressbar';
 // import { AgmCoreModule } from '@agm/core';
 import {ModalModule} from 'ngx-bootstrap/modal';
+import { RoundProgressModule } from 'angular-svg-round-progressbar';
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import {ModalModule} from 'ngx-bootstrap/modal';
     GoogleMapsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    RoundProgressModule,
     ModalModule.forRoot()
     // RoundProgressModule,
     // AgmCoreModule.forRoot({

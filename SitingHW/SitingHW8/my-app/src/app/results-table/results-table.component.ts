@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { TableItem } from '../search-form/tableItem';
+// import { TableItem } from '../search-form/tableItem';
 
 
 @Component({
@@ -24,6 +24,7 @@ export class ResultsTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  @Input () Business: Array<TableItem> = []; //TableItem[];
+  @Input () events: any[] = []; 
+  // @Input () Business: Array<TableItem> = []; 
 
 }

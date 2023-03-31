@@ -10,7 +10,7 @@
 <!-- <div class="card mx-auto col-lg-9 table_outer d-flex justify-content-center"> -->
 <div class="container-fluid" *ngIf="getLocalLength()">
   <div class="title d-flex justify-content-center">
-    <h1>List of your reservations</h1>
+    <h1>List of your favorites</h1>
   </div>
   
   <div class="table-outer d-flex justify-content-center">
@@ -18,11 +18,11 @@
       <thead>
         <tr>
           <th scope="col col-0.5">#</th>
-          <th scope="col col-3">Business Name</th>
-          <th scope="col col-3">Date</th>
-          <th scope="col col-2">Time</th>
-          <th scope="col col-3">E-mail</th>
-          <th scope="col col-0.5"> </th>
+          <th scope="col col-3">Data</th>
+          <th scope="col col-3">Event</th>
+          <th scope="col col-2">Catagory</th>
+          <th scope="col col-3">Venue</th>
+          <th scope="col col-0.5">Favorite</th>
         </tr>
       </thead>
 
@@ -32,20 +32,20 @@
             {{i+1}}
           </td>
           <td>
-            {{getkey(key).name}}
-
-          </td>
-
-          <td>
             {{getkey(key).date}}
+
           </td>
 
           <td>
-            {{getkey(key).time}}
+            {{getkey(key).name}}
           </td>
 
           <td>
-            {{getkey(key).email}}
+            {{getkey(key).genre}}
+          </td>
+
+          <td>
+            {{getkey(key).venue}}
           </td>
           <td>
             <i class="bi bi-trash" (click)="delete(key)"></i>

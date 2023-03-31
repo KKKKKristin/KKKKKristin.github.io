@@ -32,7 +32,7 @@ export class FavoritesComponent implements OnInit {
 
   delete(key:string) {
     localStorage.removeItem(key);
-    alert("Reservation cancelled!");
+    alert("Remove from favorites!");
   }
 
 

@@ -7,6 +7,7 @@ import { TableItem } from './tableItem';
 import { Suggestion } from './suggestion';
 import { Ipinfo } from './ipinfo';
 import {Coordinates} from './Coordinates'
+import { DetailsCardComponent } from '../details-card/details-card.component';
 
 
 import { debounceTime, tap, switchMap, finalize, distinctUntilChanged, filter } from 'rxjs/operators';
@@ -32,8 +33,15 @@ export class SearchFormComponent implements OnInit {
   lng = 0;
   lat = 0;
 
+
+
 @ViewChild("testing") myNameElem: ElementRef | undefined;
 @ViewChild("locInput") locInput: ElementRef | undefined;
+
+@ViewChild(DetailsCardComponent) detailsCardChildComponent: DetailsCardComponent;
+
+  
+
   display_control = false;
 
   click_index = -1;
@@ -47,6 +55,8 @@ export class SearchFormComponent implements OnInit {
   nrInput = "10";
   // Businesses: Array<TableItem> = [];
   Businesses: any[] = [];
+  result: any[] = [];
+  events: any[] = [];
 
   // port = '${process.env.API_BASE_URL}';
   
@@ -106,7 +116,7 @@ export class SearchFormComponent implements OnInit {
   }
 
   async getLoc(){
-    console.log(5555555555);
+    console.log("ipinfo get lat/lng");
     // return this.http.get<Ipinfo>("https://ipinfo.io/json?token=e7a797d54c1bba");
     var response = await fetch("https://ipinfo.io/json?token=e10417f04ac5a2");
     var result = await response.json();
@@ -116,6 +126,7 @@ export class SearchFormComponent implements OnInit {
     console.log(this.lat, this.lng);
   }
 
+  // http get request to send data to node.js
   async onSubmitTemplateBased(f:NgForm) {
     if(!this.myNameElem) return;
     // console.log(this.selectCtrl.value);
@@ -141,8 +152,22 @@ export class SearchFormComponent implements OnInit {
           url = ("http://localhost:8080/getTable?key="+this.keyWordCtrl.value+"&dist="+f.value.dist+"&cat="+this.selectCtrl.value+"&loc="+f.value.loc+"&autoLoc="+f.value.autoLoc+"&lat="+this.lat+"&lng="+this.lng)
           console.log(url);
           var response = await fetch(url);
+          // console.log(response);
           var result = await response.json();
+      
+          this.result = result;
+
+          this.events = result._embedded.events;
+
           console.log(result);
+          
+
+
+          if(this.events.length>0){
+            this.click_index = 21;
+          }
+
+          
         
     }
     else{
@@ -159,7 +184,14 @@ export class SearchFormComponent implements OnInit {
       console.log(url);
       var response = await fetch(url);
       var result = await response.json();
+      
+      this.result = result;
+      this.events = result._embedded.events;
       console.log(result);
+
+      if(this.events.length>0){
+        this.click_index = 21;
+      }
         
       // this.http.get<any[]>("/getTable?latitude="+lat+"&longitude="+lng+"&distance="+f.value.dist+"&event="+this.keyWordCtrl.value+"&category="+this.selectCtrl.value)
       
@@ -194,8 +226,14 @@ export class SearchFormComponent implements OnInit {
         // `id: ${data.id} alias: ${data.alias}`
       // );
     }
+    
+    
+    // await this.detailsCardChildComponent.getArtistSpotify();
+   
+
  }
 
+ // reset the form in web
  reset_function(f:NgForm){
    this.click_index = -1;
    this.keyWordCtrl.reset();

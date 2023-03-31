@@ -10,35 +10,36 @@
   <div class="container-fluid d-flex justify-content-center">
 
     <div class="card col-lg-9 result_table_outer">
-      <table class="table table-striped" *ngIf="Business?.length">
+      <table class="table table-striped" *ngIf="events?.length">
         <thead>
           <tr>
-            <th scope="col" class="col-0.5">#</th>
-            <th scope="col" class="col-2">Image</th>
-            <th scope="col" class="col-5.5">Business Name</th>
-            <th scope="col " class="col-2">Rating</th>
-            <th scope="col " class="col-2">Distance (miles)</th>
+            <th scope="col" class="col-0.5">Date/Time</th>
+            <th scope="col" class="col-2">Icon</th>
+            <th scope="col" class="col-5.5">Event</th>
+            <th scope="col " class="col-2">Genre</th>
+            <th scope="col " class="col-2">Venue</th>
           </tr>
         </thead>
         <tbody>
-          <tr class="row_height" *ngFor="let business of Business; let i = index" (click)="display_function(i+1)">
+          <tr class="row_height" *ngFor="let event of events; let i = index" (click)="display_function(i+1)">
+          <!-- <tr class="row_height" *ngFor="let event of events; let i = index" > -->
             <td class="index-num">
-              {{i+1}}
+              {{event.dates.start.localDate+" "+event.dates.start.localTime}}
             </td>
             <td>
-              <img src="{{business.image_url}}" class="result_img" />
-            </td>
-
-            <td>
-              {{business.name}}
+              <img src="{{event.images[0].url}}" class="result_img" />
             </td>
 
             <td>
-              {{business.rating}}
+              {{event.name}}
             </td>
 
             <td>
-              {{business.distance/1609.344 | number:'1.0-0'}}
+              {{event.classifications?.[0].genre?.name || ""}}
+            </td>
+
+            <td>
+              {{event._embedded.venues[0].name}}
             </td>
 
           </tr>

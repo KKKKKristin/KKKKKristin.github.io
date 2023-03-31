@@ -6,5 +6,7 @@ export class MapOptions {
   constructor(center:Marker,zoom:number) {
     this.center = new Marker(center.lat,center.lng);
     this.zoom = zoom;
+
+    // console.log("i'm in mapoption: "+this.zoom)
   }
 }

@@ -79,12 +79,16 @@
   </div>
 
 
-  <ng-container *ngIf="click_index >10">
-    <app-results-table [Business]='Businesses' (isOpen)="onclick_result($event)" ></app-results-table>
-  </ng-container>
+  <ng-container *ngIf="click_index >20">
+  <!-- <ng-container > -->
+    <app-results-table [events]='events' (isOpen)="onclick_result($event)" ></app-results-table>
+    <!-- <app-results-table [events]='events'></app-results-table> -->
+  </ng-container> 
 
-  <ng-container *ngIf="click_index > 0 && click_index <= 10">
-    <app-details-card [BusinessItem]='Businesses[click_index-1]' (goback)="onclick_result($event)"></app-details-card>
+  <ng-container *ngIf="click_index > 0 && click_index <= 20">
+  <!-- <ng-container> -->
+    <app-details-card [eventsItem]='events[click_index-1]'  (goback)="onclick_result($event)"></app-details-card>
+    <!-- <app-details-card [BusinessItem]='Businesses[click_index-1]' (goback)="onclick_result($event)"></app-details-card> -->
   </ng-container>
 
 </body>

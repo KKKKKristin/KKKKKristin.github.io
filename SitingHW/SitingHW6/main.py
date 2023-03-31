@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # 定义Ticketmaster API密钥
 TM_API_KEY = 'AzXDl3G5mMF367WR2AgZok1yYIIcdlsR'
-# define geocoding key(google cloud platform api)
+# define geocoding key(google cloud platform api )
 GOOGLE_GEOCODING_KEY = 'AIzaSyBIOiZOjHy7QFvCNF4qTtHRxMPdAkx2kmA'
 
 

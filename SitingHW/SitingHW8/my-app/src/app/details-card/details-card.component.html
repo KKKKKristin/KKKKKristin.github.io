@@ -6,94 +6,109 @@
   <title></title>
 </head>
 
-<body *ngIf="BusinessItem">
+<body *ngIf="eventsItem">
   <div class="container-fluid">
+
+    <!-- <form #bookingForm #reservationform="ngForm" action="index.html" method="get" (ngSubmit)="submitReservation(reservationform)"> -->
+    <!-- <form #bookingForm #reservationform="ngForm" action="index.html" method="get"> -->
+
+
     <div class="card col-lg-6">
       <i class="bi bi-arrow-left" (click)="goBack()"></i>
       <!-- <div class="card-body"> -->
-      <h1 class="card-title d-flex justify-content-center">{{BusinessItem.name}}</h1>
+      <!-- <h1 class="card-title d-flex justify-content-center">{{eventsItem.name}}</h1> -->
+      <h2 class="card-title d-flex justify-content-center">{{eventsItem.name}}</h2>
 
+      
+
+    <form #bookingForm #reservationform="ngForm" action="index.html" method="get" (ngSubmit)="submitReservation(reservationform)">
+
+      <!-- <div class="mb-3 d-flex justify-content-center" *ngIf="!haskey(eventsItem.id)">
+        <button type="submit" class="btn btn-danger" id="favorite"><mat-icon>favorite</mat-icon><mat-icon>favorite_outline</mat-icon></button>
+      </div> -->
+      <div class="row">
+        <div class="col-lg-12 d-flex flex-column align-items-center">
+        
+          <div class="mb-3 d-flex justify-content-center" *ngIf="!haskey(eventsItem.id)">
+            <button type="submit" class="btn btn-prime" id="favorite"><span class="favorite"><mat-icon>favorite_outline</mat-icon></span></button>
+          </div>
+          <div class="mb-3 d-flex justify-content-center" *ngIf="haskey(eventsItem.id)" >
+            <button  class="btn btn-prime" id="favorite" (click)="deleteBooking(eventsItem.id)"><span class="favorite"><mat-icon>favorite</mat-icon></span></button>
+          </div>
+        </div>
+    </div>
+       
+
+     </form>   
+          
       <mat-tab-group [backgroundColor]="'accent'" mat-align-tabs="center" class="tabs">
-        <mat-tab label="Business details">
-          <div class="detail-table">
-
-            <div class="row">
-              <div class="col-lg-6 d-flex flex-column align-items-center">
-                <h3 class="detail-title">Address</h3>
-                <div class="detail-content">
-                  {{BusinessItem.location.address1 + BusinessItem.location.address2 + BusinessItem.location.address3 + ' ' + BusinessItem.location.city +', ' + BusinessItem.location.state + ' ' + BusinessItem.location.zip_code}}
-                </div>
-              </div>
-
-              <div class="col-lg-6 d-flex flex-column align-items-center">
-                <h3 class="detail-title">Category</h3>
-                <div class="detail-content">
-                  {{getCategory(BusinessItem.categories)}}
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-6 d-flex flex-column align-items-center">
-                <h3 class="detail-title">Phone</h3>
-                <div class="detail-content">
-                  {{BusinessItem.phone}}
-                </div>
-              </div>
-
-              <div class="col-lg-6 d-flex flex-column align-items-center">
-                <h3 class="detail-title">Price range</h3>
-                <div class="detail-content">
-                  {{BusinessItem.price}}
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-6 d-flex flex-column align-items-center">
-                <h3 class="detail-title">Status</h3>
-                <div class="detail-content">
-                  <div *ngIf='BusinessItem.is_closed' style="color:#800000">
-                    Close
-                  </div>
-                  <div *ngIf='!BusinessItem.is_closed' style="color:#347235">
-                    Open Now
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-6 d-flex flex-column align-items-center">
-                <h3 class="detail-title">Visit Yelp for more</h3>
-
-                <div class="detail-content">
-                  <a target="_blank" rel="noopener noreferrer" [href]='BusinessItem.url'>Business Link</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-lg-12 d-flex flex-column align-items-center">
-                <div class="reserve reserve-btn d-flex justify-content-center" *ngIf="!haskey(BusinessItem.id)">
-                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" type="submit">Reserve Now</button>
-                </div>
-                <div *ngIf="haskey(BusinessItem.id)" class="mb-3 d-flex justify-content-center reserve-btn">
-                  <button type="submit" class="btn btn-primary" (click)="deleteBooking(BusinessItem.id)">Cancel reservation</button>
-                </div>
-              </div>
-            </div>
+        
+ 
+        <!-- event detail -->
 
 
-            <div class="row">
+    <mat-tab label="Event Detail">
+
+      <div class="detail-table">
+     
+     
+      <div class="inline-input">
+       <div class="div_left">
+           <div>
+             <div><h4>Date</h4></div>
+             <div><p>{{eventsItem.dates.start.localDate}}</p></div>
+           </div>
+           
+           <div>
+           <div class="exist_art"><h4>Artist_Team</h4></div>
+           <div><p>{{eventsItem._embedded?.attractions?.[0].name ||""}}</p></div>
+           
+           </div>
+
+         <div>
+           <div><h4>Venue</h4></div>
+           <div><p>{{eventsItem._embedded.venues[0].name}}</p></div>
+         </div>
+
+         <div>
+           <div><h4>Genre</h4></div>
+           <div><p>{{eventsItem.classifications?.[0].genre?.name ||""}}</p></div>
+         </div>
+
+         <div>
+           <div class="exist_price"><h4>PriceRanges</h4></div>
+           <div><p>{{eventsItem.priceRanges?.[0].min ||"" }} - {{ eventsItem.priceRanges?.[0].max ||""}}</p></div>
+         </div>
+
+         <div>
+           <div><h4>TicketStatus</h4></div>
+           <div><p class="{{eventsItem.dates.status.code}}">{{eventsItem.dates.status.code}}</p></div>
+         </div>
+
+         <div>
+            <div><h4>BuyTicketAt</h4></div>
+           <div><p><a [href]="eventsItem.url" target="_blank" class="hover">Ticketmaster</a></p></div>
+         </div>
+       </div>
+
+       <div class="div_right">
+         <div class="event_img"><img [src]="eventsItem.seatmap.staticUrl" height="320" width="350"/></div>
+       </div>
+   
+     </div>
+     
+
+              <div class="row">
               <div class="col-lg-12 d-flex flex-column align-items-center">
                 <div class="share d-flex justify-content-center">
                   <div class="twitter">
                     Share on:
-                    <a target="_blank" rel="noopener noreferrer" class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Check {{BusinessItem.name}} On Yelp.&url={{BusinessItem.url}}"><img class="media tw"
+                    <a target="_blank" rel="noopener noreferrer" class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Check {{eventsItem.name}} On Yelp.&url={{eventsItem.url}}"><img class="media tw"
                         src="../../assets/twitter.png" alt="twitter"> </a>
                   </div>
 
                   <div class="facebook">
-                    <a target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/sharer/sharer.php?u= {{BusinessItem.url}}"><img class="media fb" src="../../assets/facebook.jpg" alt="facebook"></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/sharer/sharer.php?u= {{eventsItem.url}}"><img class="media fb" src="../../assets/facebook.jpg" alt="facebook"></a>
                   </div>
                 </div>
               </div>
@@ -101,10 +116,303 @@
             </div>
 
           </div>
+    </mat-tab>
+    
 
+<!-- artist/teams detail -->
+        <mat-tab label="Artist/Teams">
+          <!-- <div *ngIf="spotifyResult.artists.items.length == 0">
+            <div class="alert alert-warning">
+              No records.
+            </div>
+          </div> -->
 
+         <div class="detail-table" *ngIf="spotifyResult">
+          <div class="row">
+            <div class="col-lg-4 d-flex flex-column align-items-center">
+              <div class="detail-content" id="image-container">
+                <img src="{{spotifyResult.artists.items[0].images[0].url}}" class="clipped-image" height="90%" width="90%"/>
+              </div>
+              <div class="detail-content">
+                {{spotifyResult.artists.items[0].name}}
+              </div>
+            </div>
+
+            <div class="col-lg-2 d-flex flex-column align-items-center">
+              <h3 class="detail-title">Popularity</h3>
+              <div class="detail-content">
+                {{spotifyResult.artists.items[0].popularity}}
+              </div>
+            </div>
+
+            <div class="col-lg-3 d-flex flex-column align-items-center">
+              <h3 class="detail-title">Followers</h3>
+              <div class="detail-content">
+                {{spotifyResult.artists.items[0].followers.total}}
+              </div>
+            </div>
+
+            <div class="col-lg-2 d-flex flex-column align-items-center">
+              <h3 class="detail-title">Spotify Link</h3>
+              <div class="detail-content">
+                <!-- <a href="{{spotifyResult.artists.items[0].external_urls.spotify}}" target="_blank"><mat-icon [ngStyle]="{ 'color': 'green' }">spotify</mat-icon></a> -->
+                <a href="{{spotifyResult.artists.items[0].external_urls.spotify}}" target="_blank"><img src="../../assets/spotify_icon.png"/></a>
+              </div>
+            </div>
+          </div>
+   
+          <div class="row" style="height:20px"></div>
+          
 
           <div class="row">
+            <div class="col-lg-8 d-flex flex-column align-items-left">           
+                Album featuring {{spotifyResult.artists.items[0].name}}
+            </div>
+          </div>
+
+          <div class="row" style="height:20px"></div>
+         
+
+          <div class="row">
+            <div class="col-lg-4 d-flex flex-column align-items-center">
+              <div class="detail-content" >
+                <img [src]="albumCovers_0"  height="90%" width="90%"/>
+              </div>
+             
+            </div>
+
+            <div class="col-lg-4 d-flex flex-column align-items-center">
+              <div class="detail-content" >
+                <img src="{{albumCovers_1}}"  height="90%" width="90%"/>
+              </div>
+             
+            </div>
+
+            <div class="col-lg-4 d-flex flex-column align-items-center">
+              <div class="detail-content" >
+                <img src="{{albumCovers_2}}"  height="90%" width="90%"/>
+              </div>
+             
+            </div>
+
+           
+
+         
+          </div>
+          <!-- old edition of artist table -->
+           <!-- <div >
+              <div >
+                <div class="alert alert-warning">
+                  No records.
+                </div>
+              </div>
+              <div >
+                <table class="table table-hover" *ngFor="let item of items; let i = index">
+                  <div style="text-align: center;">
+                      {{spotifyResult.artists.items[0].name}}
+                  </div>
+                  <div *ngIf="item.NoDetails == true" style="text-align: center;">
+                    No details available
+                  </div>
+                  <tbody *ngIf="item.NoDetails == false">
+                    <tr>
+                      <td>Name</td><td>{{spotifyResult.artists.items[0].name}}</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>Popularity</td>
+                      <td>
+                        <div style="position: relative;"><round-progress 
+                        [current]="spotifyResult.artists.items[0].popularity" 
+                        [max]="100"
+                        [color]="'#48BD28'"
+                        [stroke]="5"
+                        [radius]="20"
+                        ></round-progress>
+                        <p style="position: absolute;top: 0%; left:3%; margin-top: 3%;">{{spotifyResult.artists.items[0].popularity}}</p>
+                      </div>
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td>Followers</td><td>{{spotifyResult.artists.items[0].followers.total }}</td>
+                    </tr>
+
+                    <tr>
+                      <td>Spotify Link</td><td><a href={{spotifyResult.artists.items[0].external_urls.spotify}} target="_blank">Spotify</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+            </div> -->
+          </div>
+        </mat-tab>
+
+        <!-- reviews -->
+        <!-- <mat-tab label="Reviews">
+          <div class="table table-striped">
+            <tbody>
+              <tr *ngFor="let reviews of review; let i = index">
+                <td>
+                  <small class="user">{{reviews.user}}</small>
+                  <br>
+                  <small class="rating">Rating: {{reviews.rating}}/5 </small>
+
+                  <p class="mt-2"><small>{{reviews.text}}</small></p>
+
+
+                  <small>{{reviews.time_created.slice(0,10)}}</small>
+                </td>
+              </tr>
+
+            </tbody>
+
+          </div>
+          
+        </mat-tab> -->
+
+<!-- venue -->
+       <mat-tab label="Venue">
+          <div class="detail-table">
+
+            <div class="row">
+              <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">Name</h3>
+                <div class="detail-content">
+                  {{eventsItem.name}}
+                </div>
+              </div>
+
+              <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">Open Hours</h3>
+                <div class="detail-content" [innerHTML]="displayedOpenHours">
+                  <!-- <button class="show-more-btn" *ngIf="showMoreLessBtn2" (click)="toggleMoreLess2()">{{eventsItem._embedded.venues?.[0].boxOfficeInfo?.openHoursDetail || ""}}</button> -->
+                  <button class="show-more-btn" *ngIf="showMoreLessBtn3" (click)="toggleMoreLess3()">{{showMoreText3}}</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">Address</h3>
+                <div class="detail-content">
+                  {{eventsItem._embedded.venues[0].address.line1+", "+eventsItem._embedded.venues[0].city.name+", "+eventsItem._embedded.venues[0].state.name}}
+                </div>
+              </div>
+
+              <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">General Rule</h3>
+                <div class="detail-content" [innerHTML]="displayedGeneralRule"></div>
+                <button class="show-more-btn" *ngIf="showMoreLessBtn" (click)="toggleMoreLess()">{{ showMoreText }}</button>
+              </div>
+              
+              <!-- <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">General Rule</h3>
+                <div class="detail-content">
+                  {{eventsItem._embedded.venues[0]?.generalInfo?.generalRule || ""}}
+                </div>
+              </div> -->
+            </div>
+
+            <div class="row">
+
+              <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">Phone Number</h3>
+                <div class="detail-content">
+                  {{eventsItem._embedded.venues?.[0].boxOfficeInfo?.phoneNumberDetail || ""}}
+                </div>
+              </div>
+              <!-- <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">Phone number</h3>
+                <div class="detail-content">
+                  <div *ngIf='eventsItem.dates.status.code!="onsale"' style="color:#800000">
+                    Close
+                  </div>
+                  <div *ngIf='eventsItem.dates.status.code=="onsale"' style="color:#347235">
+                    Open Now
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">Child Rule</h3>
+                <div class="detail-content"  [innerHTML]="displayedChildRule"></div>
+                <button class="show-more-btn" *ngIf="showMoreLessBtn2" (click)="toggleMoreLess2()">{{ showMoreText2 }}</button>
+              </div>
+
+              <!-- <div class="col-lg-6 d-flex flex-column align-items-center">
+                <h3 class="detail-title">Child Rule</h3>
+
+                <div class="detail-content">
+                  <a target="_blank" rel="noopener noreferrer" [href]='eventsItem.url'>Business Link</a>
+                </div>
+              </div> -->
+
+            </div>
+
+            <!-- <div class="row">
+              <div class="col-lg-12 d-flex flex-column align-items-center">
+                <div class="reserve reserve-btn d-flex justify-content-center" *ngIf="!haskey(eventsItem.id)">
+                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" type="submit">submit</button>
+                </div>
+                <div *ngIf="haskey(eventsItem.id)" class="mb-3 d-flex justify-content-center reserve-btn">
+                  <button type="submit" class="btn btn-primary" (click)="deleteBooking(eventsItem.id)">Cancel reservation</button>
+                </div>
+              </div>
+            </div> -->
+
+  
+  <!-- Add a button to open the modal -->
+   <!-- <div class="reserve reserve-btn d-flex justify-content-center" *ngIf="!haskey(eventsItem.id)"> -->
+   <div class="reserve reserve-btn d-flex justify-content-center" >
+    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" type="submit">find in google map</button>
+  </div>
+<!-- <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">Open in Google Maps</button> -->
+
+<!-- Add a modal to show the Google Maps photo -->
+
+
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Google Maps Photo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">close</button>
+      </div>
+      <div class="modal-body">
+        <img [src]=" 'https://maps.googleapis.com/maps/api/staticmap?center'+eventsItem._embedded.venues[0].location.latitude+'%2C'+eventsItem._embedded.venues[0].location.longitude+'&zoom=18&size=600x300&key=AIzaSyAWdhANN5bDuCUAptEH-eCvMtllArwXLVY' "/>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+ </div>
+
+<!-- facebook and twitter -->
+
+            <!-- <div class="row">
+              <div class="col-lg-12 d-flex flex-column align-items-center">
+                <div class="share d-flex justify-content-center">
+                  <div class="twitter">
+                    Share on:
+                    <a target="_blank" rel="noopener noreferrer" class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Check {{eventsItem.name}} On Yelp.&url={{eventsItem.url}}"><img class="media tw"
+                        src="../../assets/twitter.png" alt="twitter"> </a>
+                  </div>
+
+                  <div class="facebook">
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/sharer/sharer.php?u= {{eventsItem.url}}"><img class="media fb" src="../../assets/facebook.jpg" alt="facebook"></a>
+                  </div>
+                </div>
+              </div>
+
+            </div> -->
+
+         
+
+
+
+          <!-- <div class="row">
             <div class="col-lg-12 d-flex flex-column align-items-center">
 
               <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
@@ -117,7 +425,6 @@
 
                   <div class="carousel-item active">
                     <img src="{{photos[0]}}" class="w-100 car-img" alt="photo1">
-                    <!-- style="width: 300px!important; height: 300px; margin:0 auto;" -->
                   </div>
                 </div>
 
@@ -138,125 +445,45 @@
               </button>
 
             </div>
-          </div>
-
-        </mat-tab>
-
-        <mat-tab label="Map location">
-          <div class="my-google-map" *ngIf="mapOptions&&marker">
-            <google-map [options]="mapOptions">
-              <map-marker [position]="marker"></map-marker>
-            </google-map>
-          </div>
-        </mat-tab>
-        <mat-tab label="Reviews">
-          <div class="table table-striped">
-            <tbody>
-              <tr *ngFor="let reviews of review; let i = index">
-                <td>
-                  <small class="user">{{reviews.user}}</small>
-                  <br>
-                  <small class="rating">Rating: {{reviews.rating}}/5 </small>
-
-                  <p class="mt-2"><small>{{reviews.text}}</small></p>
-
-
-                  <small>{{reviews.time_created.slice(0,10)}}</small>
-                </td>
-              </tr>
-
-            </tbody>
-
-          </div>
-          <!-- <div class="list-group">
-            <div class="review_col list-group-item" *ngFor="let reviews of review; let i = index">
-
-
-            </div>
           </div> -->
+
         </mat-tab>
+
+
       </mat-tab-group>
       <br>
     </div>
     <!-- </div> -->
+
+    <!-- </form> -->
+
   </div>
 </body>
 
 
+<!-- google map wimdow -->
+
 <div bsModal #childModal="bs-modal" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="width:550px">
       <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel">Reservation form</h3>
+        <h3 class="modal-title" id="exampleModalLabel">Event Venue</h3>
       </div>
-      <div class="modal-body container">
-        <div *ngIf="BusinessItem" class="businesses-name d-flex justify-content-center">
-          {{BusinessItem.name}}
-        </div>
-        <form #bookingForm #reservationform="ngForm" action="index.html" method="get" (ngSubmit)="submitReservation(reservationform)">
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Email</label>
-            <input type="email" #email_test="ngModel" [class.is-invalid]="email_test.invalid && isSubmitted" minlength="1" class="form-control" name="email" ngModel [email]="true" required>
-            <span class="text-danger" *ngIf="isSubmitted && reservationform.controls['email'].errors && reservationform.controls['email'].errors['email']">
-              Email must be a valid email address
-            </span>
-            <span class="text-danger" *ngIf="isSubmitted && reservationform.controls['email'].errors && reservationform.controls['email'].errors['required']">
-              Email is required
-            </span>
-          </div>
-          <div class="mb-3">
-
-            <label for="message-text" class="col-form-label">Date</label>
-            <input class="form-control" #test="ngModel" name="date" type="date" min="{{myDateMin}}" [class.is-invalid]="test.invalid && isSubmitted" ngModel required>
-            <span class="text-danger" *ngIf="isSubmitted && reservationform.controls['date'].errors && reservationform.controls['date'].errors['required']">
-              Date is required
-            </span>
-
-          </div>
-          <div>
-            <label for="message-text" class="col-form-label">Time</label>
-
-            <div class="row mb-3">
-
-              <div class="col-lg-3 col-3">
-                <select id="message-hour" #hour_test="ngModel" [class.is-invalid]="hour_test.invalid && isSubmitted" class="form-control dropdown-toggle" name="hour" ngModel required>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                </select>
-              </div>
-
-              :
-
-              <div class="col-lg-3 col-3">
-                <select id="message-minute" #minute_test="ngModel" [class.is-invalid]="minute_test.invalid && isSubmitted" class="form-control dropdown-toggle" name="minute" ngModel required>
-                  <option value="00">00</option>
-                  <option value="15">15</option>
-                  <option value="30">30</option>
-                  <option value="45">45</option>
-
-                </select>
-              </div>
-
-              <div class="col-lg-3 col-3">
-                <i class="bi bi-clock"></i>
-              </div>
-            </div>
-          </div>
-
-          <div class="mb-3 d-flex justify-content-center">
-            <button type="submit" class="btn btn-danger">submit</button>
+      <div class="modal-body container" >
+       
+        <!-- <form #bookingForm #reservationform="ngForm" action="index.html" method="get" (ngSubmit)="submitReservation(reservationform)"> -->
+        <form  #googleMapForm="ngForm" action="index.html" >
+        
+          <div class="map-container" >
+            <google-map [center]="{ lat: venueLat, lng: venueLng }" [zoom]="12" [options]="{ zoomControl: true, streetViewControl: true, fullscreenControl: true }" >
+              <map-marker [position]="{ lat: venueLat, lng: venueLng }" [options]="{ draggable: true }" ></map-marker>
+            </google-map>
           </div>
 
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" #closebutton class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal(reservationform)">Close</button>
+        <button type="button" #closebutton class="btn btn-secondary" data-bs-dismiss="modal" (click)="closeModal(googleMapForm)">Close</button>
 
       </div>
     </div>

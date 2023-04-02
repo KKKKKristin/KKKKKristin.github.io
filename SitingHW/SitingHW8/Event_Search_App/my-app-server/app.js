@@ -166,7 +166,7 @@ app.get('/getTable', (req, res) => {
         res.header("Access-Control-Allow-Origin","*");
 
    
-        res.send(response.data);
+         res.send(response.data);
 
          console.log("auto detection");
       }) 
@@ -200,18 +200,10 @@ app.get('/getTable', (req, res) => {
 
       var url = 'https://app.ticketmaster.com/discovery/v2/events.json?apikey='+TM_API_KEY+'&keyword='+keyword+'&segementId'+segmentId +'&radius='+distance+'&unit=miles'+'&geoPoint='+geocode;
 
-      // var url = 'https://' + API_HOST + SEARCH_PATH;
-      // console.log(HEADERS);
+     
       axios.get(url)
       .then((response) => {
-        // const events = response.data._embedded.events.map(event => ({
-        //   name: event.name,
-        //   date: event.dates.start.localDate,
-        //   time: event.dates.start.localTime,
-        //   venue: event._embedded.venues[0].name,
-        //   imageUrl: event.images[0].url,
-        //   url: event.url
-        // }));
+  
 
         res.header("Access-Control-Allow-Origin","*");
 
@@ -244,26 +236,25 @@ app.get("/autoComplete", function(req, res) {
   axios.get(auto_url)
     .then((response) => {
 
-      // console.log(response.data.businesses[0].categories);
-      // console.log(response.data.businesses[0].location.display_address);
-      //console.log(response.data.businesses);
-      // console.log(response.data);
-      // response.data.categories.map((item) => {delete item.alias; item['text'] = item.title; delete item.title;});
-      const events = response.data._embedded.events.map(event => ({
-        name: event.name,
-        date: event.dates.start.localDate,
-        time: event.dates.start.localTime,
-        venue: event._embedded.venues[0].name,
-        imageUrl: event.images[0].url,
-        url: event.url
-      }));
+      //   const events = response.data._embedded.events.map(event => ({
+      //   name: event.name,
+      //   date: event.dates.start.localDate,
+      //   time: event.dates.start.localTime,
+      //   venue: event._embedded.venues[0].name,
+      //   imageUrl: event.images[0].url,
+      //   url: event.url
+      // }));
+
+      const events = response.data._embedded.events;
+
       res.header("Access-Control-Allow-Origin","*");
       
       //console.log(response.data.terms.concat(response.data.categories));
       // res.send(response.data.terms.concat(response.data.categories));
 
       // res.send(JSON.stringify(events).data._embedded.events.concat(JSON.stringify(events)._embedded.events.event.name));
-      res.send(JSON.stringify(events));
+      res.send(events);
+      console.log(events)
 
     })
 
@@ -273,7 +264,7 @@ app.get("/autoComplete", function(req, res) {
 app.get("/getSpotify", function(req, res) {
   // let id = req.query.id;
   console.log(req.query);
-  let spotifyKeyword = req.query.attraction;
+  const spotifyKeyword = req.query.attraction;
 
   // Retrieve an access token.
   spotifyApi.clientCredentialsGrant().then(
@@ -289,13 +280,24 @@ app.get("/getSpotify", function(req, res) {
        'Authorization': 'Bearer ' + spotifyApi.getAccessToken()
       },
       params: {
+        // q: ' '+spotifyKeyword+' ',
         q: spotifyKeyword,
         type: 'artist'
       }
     }).then(response => {
     // Process the artist data
-      console.log(response.data);
+    console.log(response.data);
+
+    const artistName = response.data.artists.items[0].name.toLowerCase();
+    if (artistName.includes(spotifyKeyword.toLowerCase())) {
+    // if (artistName === spotifyKeyword) {
+    // The artist name contains the exact search term
+      console.log(artistName+" = "+spotifyKeyword+" !");
       res.send(response.data);
+    
+    }else{
+      res.send([]);
+    }
 
     }).catch(error => {
       console.error(error);
@@ -307,25 +309,13 @@ app.get("/getSpotify", function(req, res) {
   }
 );
 
-   
-
 
 });
 
 app.get("/getAlbum", function(req, res) {
   let artistId = req.query.artistId;
 
-  console.log("artistId = :"+artistId)
-  // axios.get('https://api.spotify.com/v1/search?', {
-  //   headers: {
-  //     'Authorization': 'Bearer ' + spotifyApi.getAccessToken()
-  //   },
-  //   params: {
-  //     q: spotifyKeyword,
-  //     type: 'artist'
-  //   }
-  // }).then(response => {
-   
+  console.log("artistId = :"+artistId)   
 
     axios.get(`https://api.spotify.com/v1/artists/${artistId}/albums`, {
       headers: {
@@ -350,34 +340,27 @@ app.get("/getAlbum", function(req, res) {
 });
 
 
-app.get("/review", function(req, res) {
-  let id = req.query.id;
-  var review_url = 'https://' + API_HOST + BUSINESS_PATH1 + id + '/reviews';
-  // console.log(review_url);
-  axios.get(review_url)
-    .then((response) => {
+// app.get("/review", function(req, res) {
+//   let id = req.query.id;
+//   var review_url = 'https://' + API_HOST + BUSINESS_PATH1 + id + '/reviews';
+//   // console.log(review_url);
+//   axios.get(review_url)
+//     .then((response) => {
 
-      response.data.reviews.map((item) => {
-        delete item.id;
-        delete item.url;
-        item.user = item.user.name;
-      })
+//       response.data.reviews.map((item) => {
+//         delete item.id;
+//         delete item.url;
+//         item.user = item.user.name;
+//       })
 
-      // console.log(response.data.businesses[0].categories);
-      // console.log(response.data.businesses[0].location.display_address);
-      //console.log(response.data.businesses);
 
-      // console.log(mapped_review);
-      // console.log(response.data.reviews);
+//       res.send(response.data.reviews);
+//     })
+//     .catch(function(error) {
+//       console.log(error);
+//     });
 
-      //console.log(response.data.reviews[0].user);
-      res.send(response.data.reviews);
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-
-});
+// });
 
 const port = parseInt(process.env.PORT) ||8080;
 app.listen(port, function() {

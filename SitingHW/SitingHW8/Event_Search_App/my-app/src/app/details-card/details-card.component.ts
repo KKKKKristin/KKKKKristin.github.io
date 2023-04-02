@@ -124,7 +124,7 @@ export class DetailsCardComponent implements OnInit {
    
     // let response = await fetch(spotify_url);
     // let result = await response.json();
-    this.http.get(spotify_url).subscribe((data:any) => {this.spotifyResult = data; console.log(this.spotifyResult); this.items = this.spotifyResult?.artists.items || [];; console.log(this.items.length) ; this.getAlbum(this.spotifyResult)});
+    this.http.get(spotify_url).subscribe((data:any) => {this.spotifyResult = data;   this.items = this.spotifyResult?.artists?.items||''; console.log(this.items.length) ; this.getAlbum(this.spotifyResult)});
 
 
     // var album_url = ("/getAlbum?artistId"+this.spotifyResult.artists.items[0].id);

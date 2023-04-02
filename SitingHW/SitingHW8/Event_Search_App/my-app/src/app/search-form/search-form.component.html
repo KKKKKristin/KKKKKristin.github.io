@@ -78,6 +78,16 @@
     </div>
   </div>
 
+  <div class="row" style="height : 30px"></div>
+
+  <ng-container *ngIf="click_index==0" class="justify-content-center ">
+    <!-- <ng-container > -->
+      <div class="justify-content-center " id="noRecords">
+        
+        <h2 class="justify-content-center" id="noRecords">No Events Found.</h2>
+      </div>
+      <!-- <app-results-table [events]='events'></app-results-table> -->
+    </ng-container> 
 
   <ng-container *ngIf="click_index >20">
   <!-- <ng-container > -->

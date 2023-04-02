@@ -67,3 +67,11 @@ label {
   background-color: #78787880!important; 
   border-radius: 20px;
 }   
+
+#noRecords{
+  color:red;
+  background-color: white;
+  border-radius: 10px;
+  text-align: center;
+  height: 35px;
+}

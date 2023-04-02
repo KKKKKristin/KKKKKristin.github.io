@@ -53,10 +53,10 @@ export class SearchFormComponent implements OnInit {
 
   nrSelect = "Default";
   nrInput = "10";
-  // Businesses: Array<TableItem> = [];
-  Businesses: any[] = [];
   result: any[] = [];
   events: any[] = [];
+  port = '${process.env.API_BASE_URL}';
+
 
   // port = '${process.env.API_BASE_URL}';
   
@@ -78,7 +78,7 @@ export class SearchFormComponent implements OnInit {
           this.isLoading = true;
           console.log(this.isLoading);
         }),
-        switchMap(value => this.http.get<any[]>('/autoComplete?key='+value)
+        switchMap(value => this.http.get('https://ticketmaster-event.de.r.appspot.com/autoComplete?key='+value)
           .pipe(
             finalize(() => {
               this.isLoading = false;
@@ -86,14 +86,17 @@ export class SearchFormComponent implements OnInit {
           )
         )
       )
-      .subscribe((data: Suggestion[]) => { //console.log(data);
+      .subscribe((data:any[]) => { 
+        console.log("in the aotocomplete subscribe");
+        console.log(data);
         if (data == undefined) {
           this.errorMsg = data['Error'];
           this.options = [];
         } else {
           this.errorMsg = "";
-          this.options = data.map((item)=>item["text"]);
+          this.options = data.map((item) => item.name);
           console.log(this.options);
+          console.log(this.options[0]);
         }
         //console.log(data);
       });
@@ -128,9 +131,12 @@ export class SearchFormComponent implements OnInit {
   }
 
   sortEvent() {
+    if(this.events.length > 0){
     this.events.sort(function (p1:any, p2:any) {
       return p1.dates.start.localDate.localeCompare(p2.dates.start.localDate);      
     });
+  }
+
 }
 
   // http get request to send data to node.js
@@ -175,6 +181,8 @@ export class SearchFormComponent implements OnInit {
 
           if(this.events.length>0){
             this.click_index = 21;
+          }else{
+            this.click_index=0;
           }
 
           
@@ -205,6 +213,8 @@ export class SearchFormComponent implements OnInit {
       
       if(this.events.length>0){
         this.click_index = 21;
+      }else{
+        this.click_index=0;
       }
         
       // this.http.get<any[]>("/getTable?latitude="+lat+"&longitude="+lng+"&distance="+f.value.dist+"&event="+this.keyWordCtrl.value+"&category="+this.selectCtrl.value)

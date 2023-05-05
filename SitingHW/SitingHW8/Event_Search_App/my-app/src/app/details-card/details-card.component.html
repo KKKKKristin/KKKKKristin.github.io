@@ -113,8 +113,8 @@
                 <div class="share d-flex justify-content-center">
                   <div class="twitter">
                     Share on:
-                    <a target="_blank" rel="noopener noreferrer" class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Check {{eventsItem.name}} On Yelp.&url={{eventsItem.url}}"><img class="media tw"
-                        src="../../assets/twitter.png" alt="twitter"> </a>
+                    <a target="_blank" rel="noopener noreferrer" class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Check out {{eventsItem.name}} on Ticketmaster.&url={{eventsItem.url}}" ><img class="media tw" src="../../assets/twitter.png" alt="twitter"> </a>
+                    <!-- <a target="_blank" rel="noopener noreferrer" class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Check {{eventsItem.name}} On Yelp.&url={{eventsItem.url}}"><img class="media tw" src="../../assets/twitter.png" alt="twitter"> </a> -->
                   </div>
 
                   <div class="facebook">
@@ -142,12 +142,13 @@
           <div class="row" *ngIf="items !== undefined && items.length > 0">
             <div class="col-lg-12 d-flex flex-column align-items-center">
 
-              <div id="carouselExampleIndicators" class="carousel slide col-lg-12 d-flex flex-column align-items-center" data-bs-ride="true">
-                <!-- <div class="carousel-indicators">
+              <!-- <div id="carouselExampleIndicators" class="carousel slide col-lg-12 d-flex flex-column align-items-center" data-bs-ride="true"> -->
+              <div id="carouselExampleIndicators" class="carousel slide col-lg-12 d-flex flex-column align-items-center">
+                <div class="carousel-indicators">
                   <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"  style="width:10px"></button>
                   <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"  style="width:10px"></button>
                   <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"  style="width:10px"></button>
-                </div> -->
+                </div>
                 <div class="carousel-inner col-lg-12 d-flex flex-column align-items-center" >
 
                   <div class="carousel-item active" >
@@ -259,7 +260,7 @@
                   </div>
 
 
-                  <div class="carousel-item" **ngIf="items[1]!== undefined">
+                  <div class="carousel-item" *ngIf="items[1]!== undefined">
                     <!-- <img src="{{albumCovers_0}}" class="w-100 car-img" alt="photo1"> -->
                     <div class="detail-table" >
                       <div class="row">
@@ -367,7 +368,7 @@
 
                   </div>
 
-                  <div class="carousel-item" **ngIf="items[2]!=undefined" >
+                  <div class="carousel-item" *ngIf="items[2]!=undefined" >
                     <!-- <img src="{{albumCovers_0}}" class="w-100 car-img" alt="photo1"> -->
                     <div class="detail-table" >
                       <div class="row">
@@ -485,11 +486,11 @@
                 </div> -->
 
               </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev" style="width=50px">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev" style="width:50px">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" style="width=50px">
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next" style="width:50px">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>

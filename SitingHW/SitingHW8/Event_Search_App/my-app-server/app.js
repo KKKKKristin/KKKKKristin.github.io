@@ -1,14 +1,4 @@
-// const express = require('express')
-// const app = express()
-// const port = 3000
 
-// app.get('/', (req, res) => {
-//   res.send('Hello World!')
-// })
-
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`)
-// })
 
 const express = require("express");
 const cors = require('cors');
@@ -23,7 +13,7 @@ const geohash = require('ngeohash');
 
 const SpotifyWebApi = require('spotify-web-api-node');
 //const fs = require('fs');
-let API_KEY = '3d6TMT9FEQ-Y93jPJTrPTFQXO1leS088w9e33d5xi40AX6_hQO8ht5Abu8Xv4ZqOngZ-mxx99mdjmLzj9LMIZkqYAkjkEDE4kGoWW2B-1KkUUM8O0sxQOoUn4EM5Y3Yx';
+// let API_KEY = '3d6TMT9FEQ-Y93jPJTrPTFQXO1leS088w9e33d5xi40AX6_hQO8ht5Abu8Xv4ZqOngZ-mxx99mdjmLzj9LMIZkqYAkjkEDE4kGoWW2B-1KkUUM8O0sxQOoUn4EM5Y3Yx';
 //define Ticketmaster API key
 var TM_API_KEY = 'AzXDl3G5mMF367WR2AgZok1yYIIcdlsR'
 //define geocoding key(google cloud platform api)
@@ -56,28 +46,7 @@ spotifyApi.clientCredentialsGrant().then(
 );
 
 
-// let API_HOST = 'api.yelp.com';
-// let SEARCH_PATH = '/v3/businesses/search';
-// let BUSINESS_PATH1 = '/v3/businesses/';
-// let CATEGORY_PATH = '/v3/categories';
-// let AUTO_PATH = '/v3/autocomplete';
-// let HEADERS = {
-//   // 'Authorization': 'Bearer ' + API_KEY,
-//   'Authorization':"https://app.ticketmaster.com/discovery/v2/events.json?apikey="+TM_API_KEY
-// };
 
-// app.use(bodyParser.json());
-// app.use(express.static(process.cwd()+"/busi-search/dist/busi-search"))
-
-// app.get('/', (req,res)=> {
-//   res.sendFile(process.cwd()+"/busi-search/dist/busi-search/index.html");
-// });
-// app.get('/search', (req,res)=> {
-//   res.sendFile(process.cwd()+"/busi-search/dist/busi-search/index.html")
-// });
-
-// Serve the static files from the dist directory
-// app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use(cors({
   origin: '*'
@@ -340,27 +309,7 @@ app.get("/getAlbum", function(req, res) {
 });
 
 
-// app.get("/review", function(req, res) {
-//   let id = req.query.id;
-//   var review_url = 'https://' + API_HOST + BUSINESS_PATH1 + id + '/reviews';
-//   // console.log(review_url);
-//   axios.get(review_url)
-//     .then((response) => {
 
-//       response.data.reviews.map((item) => {
-//         delete item.id;
-//         delete item.url;
-//         item.user = item.user.name;
-//       })
-
-
-//       res.send(response.data.reviews);
-//     })
-//     .catch(function(error) {
-//       console.log(error);
-//     });
-
-// });
 
 const port = parseInt(process.env.PORT) ||8080;
 app.listen(port, function() {

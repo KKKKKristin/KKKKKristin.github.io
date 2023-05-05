@@ -1,0 +1,6 @@
+//
+//  Suggestion.swift
+//
+
+
+import Foundation

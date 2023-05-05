@@ -101,7 +101,7 @@ export class DetailsCardComponent implements OnInit {
       return;
 
    //google-map
-    this.marker = new Marker(Number(this.eventsItem._embedded.venues[0].location.latitude),Number(this.eventsItem._embedded.venues[0].location.latitude));
+    this.marker = new Marker(Number(this.eventsItem._embedded.venues[0].location.latitude),Number(this.eventsItem._embedded.venues[0].location.longitude));
     this.mapOptions = new MapOptions(this.marker, 18);
     // this.marker.lat = Number(this.eventsItem._embedded.venues[0].location.latitude);
     this.venueLat = parseFloat(this.eventsItem._embedded.venues[0].location.latitude);

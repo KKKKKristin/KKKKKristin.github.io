@@ -61,7 +61,8 @@ export class SearchFormComponent implements OnInit {
   // port = '${process.env.API_BASE_URL}';
   
   // private url = 'https://ticketmaster-event.de.r.appspot.com/getTable';
-  private url = 'https://ticketmaster-event.de.r.appspot.com/getTable';
+  // private url = 'https://ticketmaster-event.de.r.appspot.com/getTable';
+
   constructor (private http: HttpClient) {}
 
   // auto complete
@@ -94,7 +95,9 @@ export class SearchFormComponent implements OnInit {
           this.options = [];
         } else {
           this.errorMsg = "";
-          this.options = data.map((item) => item.name);
+          // this.options = data.map((item) => item.name);
+          this.options = data.map((item) => item['name']);
+
           console.log(this.options);
           console.log(this.options[0]);
         }
@@ -151,18 +154,7 @@ export class SearchFormComponent implements OnInit {
 
     if(f.value.autoLoc){
           await this.getLoc();
-          // console.log(f);
-          // let params = new HttpParams().set('key', this.keyWordCtrl.value)
-          // .set('dist', f.value.dist)
-          // .set('cat', this.selectCtrl.value)
-          // .set('loc', f.value.loc)
-          // .set('autoLoc', f.value.autoLoc)
-          // .set('lat', this.lat)
-          // .set('lng', this.lng);
-          // console.log(params);
-          // this.http.get<any[]>(this.url, { params: params, withCredentials: true})
-          // console.log(this.lat, this.lng);
-          // url = ("https://ticketmaster-event.de.r.appspot.com/getTable?key="+this.keyWordCtrl.value+"&dist="+f.value.dist+"&cat="+this.selectCtrl.value+"&loc="+f.value.loc+"&autoLoc="+f.value.autoLoc+"&lat="+this.lat+"&lng="+this.lng)
+        
           url = ("https://ticketmaster-event.de.r.appspot.com/getTable?key="+this.keyWordCtrl.value+"&dist="+f.value.dist+"&cat="+this.selectCtrl.value+"&loc="+f.value.loc+"&autoLoc="+f.value.autoLoc+"&lat="+this.lat+"&lng="+this.lng)
           console.log(url);
           var response = await fetch(url);

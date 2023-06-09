@@ -13,3 +13,7 @@
 
 ## HW9
 **Build an iOS Application (Swift/SwiftUI)**
+
+csci571: https://csci571.com/
+account：csci571
+password：notes1

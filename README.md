@@ -1,4 +1,6 @@
-# Web Technology
+# Web Technology Course Project
+
+## find each project in Siting_HW directory/ showcase in Siting_HW.html
 
 ## HW3
 **A web page(html/css)**

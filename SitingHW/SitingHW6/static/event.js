@@ -1,913 +1,867 @@
-#include "trojanmap.h"
+// import $ from 'jquery';
+var jsonArray;
+var jsonEvent;
+var address;
+var latitude;
+var longitude;
 
-//-----------------------------------------------------
-// TODO: Students should implement the following:
-//-----------------------------------------------------
-/**
- * GetLat: Get the latitude of a Node given its id. If id does not exist, return
- * -1.
- *
- * @param  {std::string} id : location id
- * @return {double}         : latitude
- */
-double TrojanMap::GetLat(const std::string &id) { 
-  
-  return 0;
-}
+var sort_incending_event = 1;
+var sort_incending_genre = 1;
+var sort_incending_venue = 1;
 
-/**
- * GetLon: Get the longitude of a Node given its id. If id does not exist,
- * return -1.
- *
- * @param  {std::string} id : location id
- * @return {double}         : longitude
- */
-double TrojanMap::GetLon(const std::string &id) {
-  return 0;
-}
 
-/**
- * GetName: Get the name of a Node given its id. If id does not exist, return
- * "NULL".
- *
- * @param  {std::string} id : location id
- * @return {std::string}    : name
- */
-std::string TrojanMap::GetName(const std::string &id) {
-  return "";
-}
+// 定义IPInfo API密钥
+IPINFO_API_TOKEN = "e10417f04ac5a2"
+IPINFO_URL = "https://ipinfo.io/?token=e10417f04ac5a2"
 
-/**
- * GetNeighborIDs: Get the neighbor ids of a Node. If id does not exist, return
- * an empty vector.
- *
- * @param  {std::string} id            : location id
- * @return {std::vector<std::string>}  : neighbor ids
- */
-std::vector<std::string> TrojanMap::GetNeighborIDs(const std::string &id) {
-  return {};
-}
+// 定义Ticketmaster API密钥
+TM_API_KEY = 'AzXDl3G5mMF367WR2AgZok1yYIIcdlsR'
 
-/**
- * GetID: Given a location name, return the id.
- * If the node does not exist, return an empty string.
- * The location name must be unique, which means there is only one node with the name.
- *
- * @param  {std::string} name          : location name
- * @return {std::string}               : id
- */
-std::string TrojanMap::GetID(const std::string &name) {
-  std::string res = "";
-  return res;
-}
 
-/**
- * GetPosition: Given a location name, return the position. If id does not
- * exist, return (-1, -1).
- *
- * @param  {std::string} name          : location name
- * @return {std::pair<double,double>}  : (lat, lon)
- */
-std::pair<double, double> TrojanMap::GetPosition(std::string name) {
-  std::pair<double, double> results(-1, -1);
-  return results;
-}
+//check if the input boxes are not filled
 
-/**
- * CalculateEditDistance: Calculate edit distance between two location names
- * @param  {std::string} a          : first string
- * @param  {std::string} b          : second string
- * @return {int}                    : edit distance between two strings
- */
-int TrojanMap::CalculateEditDistance(std::string a, std::string b) {     
-  return 0;
-}
+const searchButton = document.getElementById("searchButton");
+const keywordInput = document.getElementById("eventInput");
+const locationInput = document.getElementById("addressInput");
+const keywordError = document.getElementById("keywordError");
+const locationError = document.getElementById("locationError");
 
-/**
- * FindClosestName: Given a location name, return the name with the smallest edit
- * distance.
- *
- * @param  {std::string} name          : location name
- * @return {std::string} tmp           : the closest name
- */
-std::string TrojanMap::FindClosestName(std::string name) {
-  std::string tmp = ""; // Start with a dummy word
-  return tmp;
-}
+  searchButton.addEventListener('click', function() {
+  if (!keywordInput.checkValidity()) {
+    keywordInput.reportValidity();
+    return;
+  } else {
+      searchEvents();
+ 
 
-/**
- * Autocomplete: Given a parital name return all the possible locations with
- * partial name as the prefix. The function should be case-insensitive.
- *
- * @param  {std::string} name          : partial name
- * @return {std::vector<std::string>}  : a vector of full names
- */
-std::vector<std::string> TrojanMap::Autocomplete(std::string name) {
-  std::vector<std::string> results;
-  return results;
-}
-
-/**
- * GetAllCategories: Return all the possible unique location categories, i.e.
- * there should be no duplicates in the output.
- *
- * @return {std::vector<std::string>}  : all unique location categories
- */
-std::vector<std::string> TrojanMap::GetAllCategories() {
-  return {};
-}
-
-/**
- * GetAllLocationsFromCategory: Return all the locations of the input category (i.e.
- * 'attributes' in data.csv). If there is no location of that category, return
- * (-1, -1). The function should be case-insensitive.
- *
- * @param  {std::string} category         : category name (attribute)
- * @return {std::vector<std::string>}     : ids
- */
-std::vector<std::string> TrojanMap::GetAllLocationsFromCategory(
-    std::string category) {
-  std::vector<std::string> res;
-  return res;
-}
-
-/**
- * GetLocationRegex: Given the regular expression of a location's name, your
- * program should first check whether the regular expression is valid, and if so
- * it returns all locations that match that regular expression.
- *
- * @param  {std::regex} location name      : the regular expression of location
- * names
- * @return {std::vector<std::string>}     : ids
- */
-std::vector<std::string> TrojanMap::GetLocationRegex(std::regex location) {
-  return {};
-}
-
-/**
- * CalculateDistance: Get the distance between 2 nodes.
- * We have provided the code for you. Please do not need to change this function.
- * You can use this function to calculate the distance between 2 nodes.
- * The distance is in mile.
- * The distance is calculated using the Haversine formula.
- * https://en.wikipedia.org/wiki/Haversine_formula
- * 
- * @param  {std::string} a  : a_id
- * @param  {std::string} b  : b_id
- * @return {double}  : distance in mile
- */
-double TrojanMap::CalculateDistance(const std::string &a_id,
-                                    const std::string &b_id) {
-  // Do not change this function
-  Node a = data[a_id];
-  Node b = data[b_id];
-  double dlon = (b.lon - a.lon) * M_PI / 180.0;
-  double dlat = (b.lat - a.lat) * M_PI / 180.0;
-  double p = pow(sin(dlat / 2), 2.0) + cos(a.lat * M_PI / 180.0) *
-                                           cos(b.lat * M_PI / 180.0) *
-                                           pow(sin(dlon / 2), 2.0);
-  double c = 2 * asin(std::min(1.0, sqrt(p)));
-  return c * 3961;
-}
-
-/**
- * CalculatePathLength: Calculates the total path length for the locations
- * inside the vector.
- * We have provided the code for you. Please do not need to change this function.
- * 
- * @param  {std::vector<std::string>} path : path
- * @return {double}                        : path length
- */
-double TrojanMap::CalculatePathLength(const std::vector<std::string> &path) {
-  // Do not change this function
-  double sum = 0;
-  for (int i = 0; i < int(path.size()) - 1; i++) {
-    sum += CalculateDistance(path[i], path[i + 1]);
   }
-  return sum;
-}
 
-/**
- * CalculateShortestPath_Dijkstra: Given 2 locations, return the shortest path
- * which is a list of id. Hint: Use priority queue.
- *
- * @param  {std::string} location1_name     : start
- * @param  {std::string} location2_name     : goal
- * @return {std::vector<std::string>}       : path
- */
-std::vector<std::string> TrojanMap::CalculateShortestPath_Dijkstra(
-    std::string location1_name, std::string location2_name) {
-  std::vector<std::string> path;
-  return path;
-}
+  if (!locationInput.checkValidity()) {
+    locationInput.reportValidity();
+      return;
+        
+  } else {
+      
+      searchEvents();
 
-/**
- * CalculateShortestPath_Bellman_Ford: Given 2 locations, return the shortest
- * path which is a list of id. Hint: Do the early termination when there is no
- * change on distance.
- *
- * @param  {std::string} location1_name     : start
- * @param  {std::string} location2_name     : goal
- * @return {std::vector<std::string>}       : path
- */
-std::vector<std::string> TrojanMap::CalculateShortestPath_Bellman_Ford(
-    std::string location1_name, std::string location2_name) {
-  std::vector<std::string> path;
-  return path;
-}
 
-/**
- * Traveling salesman problem: Given a list of locations, return the shortest
- * path which visit all the places and back to the start point.
- *
- * @param  {std::vector<std::string>} input : a list of locations needs to visit
- * @return {std::pair<double, std::vector<std::vector<std::string>>} : a pair of total distance and the all the progress to get final path, 
- *                                                                      for example: {10.3, {{0, 1, 2, 3, 4, 0}, {0, 1, 2, 3, 4, 0}, {0, 4, 3, 2, 1, 0}}},
- *                                                                      where 10.3 is the total distance, 
- *                                                                      and the first vector is the path from 0 and travse all the nodes and back to 0,
- *                                                                      and the second vector is the path shorter than the first one,
- *                                                                      and the last vector is the shortest path.
- */
-// Please use brute force to implement this function, ie. find all the permutations.
-std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravelingTrojan_Brute_force(
-                                    std::vector<std::string> location_ids) {
-  std::pair<double, std::vector<std::vector<std::string>>> records;
-  return records;
-}
-
-// Please use backtracking to implement this function
-std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravelingTrojan_Backtracking(
-                                    std::vector<std::string> location_ids) {
-  std::pair<double, std::vector<std::vector<std::string>>> records;
-  return records;
-}
-
-// Hint: https://en.wikipedia.org/wiki/2-opt
-std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravelingTrojan_2opt(
-      std::vector<std::string> location_ids){
-  std::pair<double, std::vector<std::vector<std::string>>> records;
-  return records;
-}
-
-// This is optional
-std::pair<double, std::vector<std::vector<std::string>>> TrojanMap::TravelingTrojan_3opt(
-      std::vector<std::string> location_ids){
-  std::pair<double, std::vector<std::vector<std::string>>> records;
-  return records;
-}
-
-/**
- * Given CSV filename, it read and parse locations data from CSV file,
- * and return locations vector for topological sort problem.
- * We have provided the code for you. Please do not need to change this function.
- * Example: 
- *   Input: "topologicalsort_locations.csv"
- *   File content:
- *    Name
- *    Ralphs
- *    KFC
- *    Chick-fil-A
- *   Output: ['Ralphs', 'KFC', 'Chick-fil-A']
- * @param  {std::string} locations_filename     : locations_filename
- * @return {std::vector<std::string>}           : locations
- */
-std::vector<std::string> TrojanMap::ReadLocationsFromCSVFile(
-    std::string locations_filename) {
-  std::vector<std::string> location_names_from_csv;
-  std::fstream fin;
-  fin.open(locations_filename, std::ios::in);
-  std::string line, word;
-  getline(fin, line);
-  while (getline(fin, word)) {
-    location_names_from_csv.push_back(word);
   }
-  fin.close();
-  return location_names_from_csv;
-}
+});
 
-/**
- * Given CSV filenames, it read and parse dependencise data from CSV file,
- * and return dependencies vector for topological sort problem.
- * We have provided the code for you. Please do not need to change this function.
- * Example: 
- *   Input: "topologicalsort_dependencies.csv"
- *   File content:
- *     Source,Destination
- *     Ralphs,Chick-fil-A
- *     Ralphs,KFC
- *     Chick-fil-A,KFC
- *   Output: [['Ralphs', 'Chick-fil-A'], ['Ralphs', 'KFC'], ['Chick-fil-A', 'KFC']]
- * @param  {std::string} dependencies_filename     : dependencies_filename
- * @return {std::vector<std::vector<std::string>>} : dependencies
- */
-std::vector<std::vector<std::string>> TrojanMap::ReadDependenciesFromCSVFile(
-    std::string dependencies_filename) {
-  std::vector<std::vector<std::string>> dependencies_from_csv;
-  std::fstream fin;
-  fin.open(dependencies_filename, std::ios::in);
-  std::string line, word;
-  getline(fin, line);
-  while (getline(fin, line)) {
-    std::stringstream s(line);
-    std::vector<std::string> dependency;
-    while (getline(s, word, ',')) {
-      dependency.push_back(word);
+
+
+//locationInput will disappear if checked
+
+function toggleInput() {
+    var checkbox = document.getElementById("checkbox");
+    var locationInput = document.getElementById("addressInput");
+    if (checkbox.checked) {
+     locationInput.style.display = "none";
+    } else {
+      locationInput.style.display = "block";
     }
-    dependencies_from_csv.push_back(dependency);
   }
-  fin.close();
-  return dependencies_from_csv;
+
+  //clear button
+function clearForm() {
+    document.getElementById("eventInput").value = "";
+    document.getElementById("distanceInput").value = "";
+    document.getElementById("category").value = "default";
+    document.getElementById("addressInput").value = "";
+  }
+
+
+// // Add event listener to search button, if clicked, search events
+// document.getElementById("searchButton").addEventListener('click', searchEvents);
+
+
+
+function searchEvents() {
+  // 获取用户输入的距离和事件名称
+  
+   var distance = document.getElementById("distanceInput").value;
+   var event = document.getElementById("eventInput").value;
+   var category = document.getElementById("category").value;
+  //get address by ipinfo or geocode
+
+
+  var checkbox = document.getElementById("checkbox");
+  if(checkbox.checked==true){
+     AddressAutoDetection();
+  }else{
+     AddressFromInput();
+  }
+
 }
 
-/**
- * DeliveringTrojan: Given a vector of location names, it should return a
- * sorting of nodes that satisfies the given dependencies. If there is no way to
- * do it, return a empty vector.
- *
- * @param  {std::vector<std::string>} locations                     : locations
- * @param  {std::vector<std::vector<std::string>>} dependencies     : prerequisites
- * @return {std::vector<std::string>} results                       : results
- */
-std::vector<std::string> TrojanMap::DeliveringTrojan(
-    std::vector<std::string> &locations,
-    std::vector<std::vector<std::string>> &dependencies) {
-  std::vector<std::string> result;
-  return result;     
+function AddressAutoDetection(){
+
+  var distance = document.getElementById("distanceInput").value;
+   var event = document.getElementById("eventInput").value;
+   var category = document.getElementById("category").value;
+
+   async function getLocation() {
+    try {
+      const response = await fetch(IPINFO_URL);
+      const data = await response.json();
+      const { loc } = data;
+      const [latitude, longitude] = loc.split(",");
+      // 调用函数，并传递经纬度参数
+      sendSearchRequest(latitude, longitude, distance, event, category);
+
+    } catch (error) {
+      console.error(error);
+    }
+   }  
+    getLocation();
+
+
 }
 
-/**
- * inSquare: Give a id retunr whether it is in square or not.
- *
- * @param  {std::string} id            : location id
- * @param  {std::vector<double>} square: four vertexes of the square area
- * @return {bool}                      : in square or not
- */
-bool TrojanMap::inSquare(std::string id, std::vector<double> &square) {
-  return true;
-}
+function AddressFromInput(){
+  var distance = document.getElementById("distanceInput").value;
+   var event = document.getElementById("eventInput").value;
+   var category = document.getElementById("category").value;
 
-
-/**
- * GetSubgraph: Give four vertexes of the square area, return a list of location
- * ids in the squares
- *
- * @param  {std::vector<double>} square         : four vertexes of the square
- * area
- * @return {std::vector<std::string>} subgraph  : list of location ids in the
- * square
- */
-std::vector<std::string> TrojanMap::GetSubgraph(std::vector<double> &square) {
-  // include all the nodes in subgraph
-  std::vector<std::string> subgraph;
-  return subgraph;
-}
-
-/**
- * Cycle Detection: Given four points of the square-shape subgraph, return true
- * if there is a cycle path inside the square, false otherwise.
- *
- * @param {std::vector<std::string>} subgraph: list of location ids in the
- * square
- * @param {std::vector<double>} square: four vertexes of the square area
- * @return {bool}: whether there is a cycle or not
- */
-bool TrojanMap::CycleDetection(std::vector<std::string> &subgraph, std::vector<double> &square) {
-  return false;
-}
-
-/**
- * FindNearby: Given a class name C, a location name L and a number r,
- * find all locations in class C on the map near L with the range of r and
- * return a vector of string ids
- *
- * @param {std::string} className: the name of the class
- * @param {std::string} locationName: the name of the location
- * @param {double} r: search radius
- * @param {int} k: search numbers
- * @return {std::vector<std::string>}: location name that meets the requirements
- */
-std::vector<std::string> TrojanMap::FindNearby(std::string attributesName, std::string name, double r, int k) {
-  std::vector<std::string> res;
-  return res;
-}
-
-/**
- * Shortest Path to Visit All Nodes: Given a list of locations, return the shortest
- * path which visit all the places and no need to go back to the start point.
- *
- * @param  {std::vector<std::string>} input : a list of locations needs to visit
- * @return {std::vector<std::string> }      : the shortest path
- */
-std::vector<std::string> TrojanMap::TrojanPath(
-      std::vector<std::string> &location_names) {
-    std::vector<std::string> res;
-    return res;
-}
-
-/**
- * Given a vector of queries, find whether there is a path between the two locations with the constraint of the gas tank.
- *
- * @param  {std::vector<std::pair<double, std::vector<std::string>>>} Q : a list of queries
- * @return {std::vector<bool> }      : existence of the path
- */
-std::vector<bool> TrojanMap::Queries(const std::vector<std::pair<double, std::vector<std::string>>>& q) {
-    std::vector<bool> ans(q.size());
-    return ans;
-}
-
-/**
- * CreateGraphFromCSVFile: Read the map data from the csv file
- * We have provided the code for you. Please do not need to change this function.
- */
-void TrojanMap::CreateGraphFromCSVFile() {
-  // Do not change this function
-  std::fstream fin;
-  fin.open("src/lib/data.csv", std::ios::in);
-  std::string line, word;
-
-  getline(fin, line);
-  while (getline(fin, line)) {
-    std::stringstream s(line);
-
-    Node n;
-    int count = 0;
-    while (getline(s, word, ',')) {
-      word.erase(std::remove(word.begin(), word.end(), '\''), word.end());
-      word.erase(std::remove(word.begin(), word.end(), '"'), word.end());
-      word.erase(std::remove(word.begin(), word.end(), '{'), word.end());
-      word.erase(std::remove(word.begin(), word.end(), '}'), word.end());
-      if (count == 0)
-        n.id = word;
-      else if (count == 1)
-        n.lat = stod(word);
-      else if (count == 2)
-        n.lon = stod(word);
-      else if (count == 3)
-        n.name = word;
-      else {
-        word.erase(std::remove(word.begin(), word.end(), ' '), word.end());
-        if (isalpha(word[0])) n.attributes.insert(word);
-        if (isdigit(word[0])) n.neighbors.push_back(word);
+  var address = document.getElementById("addressInput").value;
+    // GET request python'/geocode_api/<address>'获取地址对应的经纬度
+    var xhr = new XMLHttpRequest();
+  
+    xhr.onreadystatechange = function() {
+   
+  
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+         var latitude = response.loc.results[0].geometry.location.lat;
+         var longitude = response.loc.results[0].geometry.location.lng;
+         //将经纬度发送到后台的Python脚本进行处理
+        sendSearchRequest(latitude, longitude, distance, event, category);
+        // console.log(response);
+  
+     
       }
-      count++;
     }
-    data[n.id] = n;
-  }
-  fin.close();
+    xhr.open("GET", '/ip_api/'+ address, true);
+    xhr.send();
+  
+}
+
+
+//定义发送请求的函数sendsearchrequest()
+function sendSearchRequest(latitude, longitude, distance, event, category) {
+  // 使用XMLHttpRequest发送GET请求
+  var xhr = new XMLHttpRequest();
+  var url = "/search?latitude=" + latitude + "&longitude=" + longitude + "&distance=" + distance + "&event=" + event + "&category=" + category;
+  
+  //xhr.setRequestHeader("Content-Type", "application/json");
+ 
+  xhr.onreadystatechange = function() {
+ 
+    if (this.readyState === 4 && this.status === 200) {
+      // 解析JSON响应并显示结果
+      var response = JSON.parse(this.responseText);
+       jsonArray = response;
+       console.log(response);
+      
+    
+       if(typeof response === "undefined" || typeof response._embedded === "undefined"){
+        document.getElementById("searchResults").innerHTML="";
+        document.getElementById("noRecordsNotice").innerHTML = `<div class="no_records">No Records Found<div/>`;
+
+        document.getElementById("eventDetailResults").innerHTML = "";
+
+        document.getElementById("showVenueDetail_notice").innerHTML = "";
+        document.getElementById("arrow").innerHTML = "";
+        document.getElementById("showVenueDetail").innerHTML = "";
+
+        document.querySelector("#noRecordsNotice").style.display = 'block';
+        window.scrollTo({
+        top: document.querySelector("#noRecordsNotice").offsetTop,
+        behavior: 'smooth'
+        });
+
+       } else{
+        document.getElementById("noRecordsNotice").innerHTML = "";
+        displaySearchResults(response);
+        console.log("events are displayed!!!");
+
+       }
+
+ 
+    }else{
+      console.log("sendSearchRequest failed.  Returned status of " + xhr.status);
+
+    }
+  };
+  xhr.open("GET", url, true);
+ // xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send();
+
+  
 }
 
 
 
-====================================================
+function displaySearchResults(results) {
+
+  //document.getElementById("searchResults").innerHTML = table;
+
+  document.getElementById("eventDetailResults").innerHTML = "";
+  document.getElementById("showVenueDetail_notice").innerHTML = "";
+  document.getElementById("arrow").innerHTML = "";
+  document.getElementById("showVenueDetail").innerHTML = "";
 
 
-#ifndef TROJAN_MAP_H
-#define TROJAN_MAP_H
+ // table += `<tr><td><div class="inline-input">` + date + '\n' + time + `</div></td><td><div><img height="80px" width="auto" src="` + icon + `" /></div></td><td class="event_hover"><div id="cell" onclick="searchEventDetail(\'${eventId}\');">` + event + `</div></td><td><div>` + genre + `</div></td><td><div>` + venue + `</div></td></tr>`;
 
-#include <math.h>
-
-#include <algorithm>
-#include <cfloat>
-#include <climits>
-#include <fstream>
-#include <iostream>
-#include <map>
-#include <queue>
-#include <regex>
-#include <sstream>
-#include <stack>
-#include <string>
-#include <unordered_map>
-#include <unordered_set>
-#include <set>
-#include <vector>
-
-// A Node is the location of one point in the map.
-class Node {
- public:
-  Node(){};
-  Node(const Node &n) {
-    id = n.id;
-    lat = n.lat;
-    lon = n.lon;
-    name = n.name;
-    neighbors = n.neighbors;
-    attributes = n.attributes;
-  };
-  std::string id;    // A unique id assigned to each point.
-  double lat;        // Latitude
-  double lon;        // Longitude
-  std::string name;  // Name of the location. E.g. "Bank of America".
-  std::vector<std::string>
-      neighbors;  // List of the ids of all neighbor points.
-  std::unordered_set<std::string>
-      attributes;  // List of the attributes of the location.
-};
-
-class TrojanMap {
- public:
-  // Constructor
-  TrojanMap() { CreateGraphFromCSVFile(); };
-
-  // A map of ids to Nodes.
-  std::unordered_map<std::string, Node> data; //node contains all the ids
-
-  //-----------------------------------------------------
-  // Read in the data
-  void CreateGraphFromCSVFile();
-
-  //-----------------------------------------------------
-  // TODO: Implement these functions and create unit tests for them:
-  // Get the Latitude of a Node given its id.
-  double GetLat(const std::string &id);
-
-  // Get the Longitude of a Node given its id.
-  double GetLon(const std::string &id);
-
-  // Get the name of a Node given its id.
-  std::string GetName(const std::string &id);
-
-  // Get the id given its name.
-  std::string GetID(const std::string &name);
-
-  // Get the neighbor ids of a Node.
-  std::vector<std::string> GetNeighborIDs(const std::string &id);
-
-  // Returns a vector of names given a partial name.
-  std::vector<std::string> Autocomplete(std::string name);
-
-  // GetAllCategories: Return all the possible unique location categories, i.e.
-  //  there should be no duplicates in the output.
-  std::vector<std::string> GetAllCategories();
-
-  std::vector<std::string> GetAllLocationsFromCategory(std::string category);
-
-  std::vector<std::string> GetLocationRegex(std::regex location);
-
-  // Returns lat and lon of the given the name.
-  std::pair<double, double> GetPosition(std::string name);
-
-  // Calculate location names' edit distance
-  int CalculateEditDistance(std::string, std::string);
-
-  // Find the closest name
-  std::string FindClosestName(std::string name);
-
-  // Get the distance between 2 nodes.
-  double CalculateDistance(const std::string &a, const std::string &b);
-
-  // Calculates the total path length for the locations inside the vector.
-  double CalculatePathLength(const std::vector<std::string> &path);
-
-  // Given the name of two locations, it should return the **ids** of the nodes
-  // on the shortest path.
-  std::vector<std::string> CalculateShortestPath_Dijkstra(
-      std::string location1_name, std::string location2_name);
-  std::vector<std::string> CalculateShortestPath_Bellman_Ford(
-      std::string location1_name, std::string location2_name);
-
-  // Given CSV filename, it read and parse locations data from CSV file,
-  // and return locations vector for topological sort problem.
-  std::vector<std::string> ReadLocationsFromCSVFile(
-      std::string locations_filename);
-
-  // Given CSV filenames, it read and parse dependencise data from CSV file,
-  // and return dependencies vector for topological sort problem.
-  std::vector<std::vector<std::string>> ReadDependenciesFromCSVFile(
-      std::string dependencies_filename);
-
-  // Given a vector of location names, it should return a sorting of nodes
-  // that satisfies the given dependencies.
-  std::vector<std::string> DeliveringTrojan(
-      std::vector<std::string> &location_names,
-      std::vector<std::vector<std::string>> &dependencies);
-
-  // Given a vector of location ids, it should reorder them such that the path
-  // that covers all these points has the minimum length.
-  // The return value is a pair where the first member is the total_path,
-  // and the second member is the reordered vector of points.
-  // (Notice that we don't find the optimal answer. You can return an estimated
-  // path.)
-  std::pair<double, std::vector<std::vector<std::string>>>
-  TravelingTrojan_Brute_force(std::vector<std::string> location_ids);
-
-  std::pair<double, std::vector<std::vector<std::string>>>
-  TravelingTrojan_Backtracking(std::vector<std::string> location_ids);
-
-  std::pair<double, std::vector<std::vector<std::string>>> TravelingTrojan_2opt(
-      std::vector<std::string> location_ids);
-
-  std::pair<double, std::vector<std::vector<std::string>>> TravelingTrojan_3opt(
-      std::vector<std::string> location_ids);
-
-  std::vector<std::string> TrojanPath(std::vector<std::string> &location_names);
-    
-  // Check whether the id is in square or not
-  bool inSquare(std::string id, std::vector<double> &square);
-
-  // Get the subgraph based on the input
-  std::vector<std::string> GetSubgraph(std::vector<double> &square);
-
-  // Given a subgraph specified by a square-shape area, determine whether there
-  // is a cycle or not in this subgraph.
-  bool CycleDetection(std::vector<std::string> &subgraph,
-                      std::vector<double> &square);
-
-  // Given a location id and k, find the k closest points on the map
-  std::vector<std::string> FindNearby(std::string, std::string, double, int);
+  // 创建HTML表格并填充搜索结果
+  var table = `<table id='table'><tr><th>Date</th><th>Icon</th><th id='head_event'>Event</th><th id='head_genre' >Genre</th><th id='head_venue' >Venue</th></tr>`;
   
-  // Takes in a vector of queries. Each query consists of a pair: <tank_capacity, [source, destination]>.
-  // Returns the result of each query in a vector.
-  std::vector<bool> Queries(const std::vector<std::pair<double, std::vector<std::string>>> &q);
-
-  //----------------------------------------------------- User-defined functions
-};
-
-#endif
-
-
-
-
-=====================================
-
-mapui.cc
-
-
-#ifndef MapUI_H
-#define MapUI_H
-#define DOT_SIZE 5
-#define LINE_WIDTH 3
-
-// #define NCURSES
-#ifdef NCURSES
-#include <sstream>
-#include <fstream>
-#include <unistd.h>
-#include <ncurses.h>
-#include "src/lib/ui.h"
-#endif
-
-#include <iostream>
-#include "trojanmap.h"
-#include <time.h>
-#include "opencv2/core.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/videoio.hpp"
-
-class MapUI {
- private:
-  TrojanMap map;
-
- public:
-  // Create the menu.
-  void PrintMenu();
-
-  // Create the Dynamic menu.
-  #ifdef NCURSES
-  void DynamicPrintMenu();
-  #endif
-  // Visualization
-  // Plot the map
-  void PlotMap();
-
-  // Given a location id, plot the point on the map.
-  void PlotPoint(std::string id);
-
-  // Given a lat and lon, plot the point on the map.
-  void PlotPoint(double lat, double lon);
-
-  // Given a vector of location ids draws the path (connects the points)
-  void PlotPath(std::vector<std::string> &location_ids);
-
-  // Given a vector of location ids draws the points on the map (no path).
-  void PlotPoints(std::vector<std::string> &location_ids);
-
-  // Given a vector of location ids draws the points on the map with path.
-  void PlotPointsandEdges(std::vector<std::string> &location_ids, std::vector<double> &square);
-
-  // Given a vector of location ids draws the points with their order on the map (no path).
-  void PlotPointsOrder(std::vector<std::string> &location_ids);
-
-  // Given a vector of location ids and origin, draws the points with their label.
-  void PlotPointsLabel(std::vector<std::string> &location_ids, std::string origin);
-
-  // Create the videos of the progress to get the path
-  void CreateAnimation(std::vector<std::vector<std::string>>, std::string);
-
-  // Given a vector of location ids draws the path (connects the points) and name
-  void PlotPathwithName(std::vector<std::string> &location_ids);
-
-  // Transform the location to the position on the map
-  std::pair<double, double> GetPlotLocation(double lat, double lon);
-};
-
-#endif
-
-
-
- ==============
-
-
- mapui.h:
-
-#ifndef MapUI_H
-#define MapUI_H
-#define DOT_SIZE 5
-#define LINE_WIDTH 3
-
-// #define NCURSES
-#ifdef NCURSES
-#include <sstream>
-#include <fstream>
-#include <unistd.h>
-#include <ncurses.h>
-#include "src/lib/ui.h"
-#endif
-
-#include <iostream>
-#include "trojanmap.h"
-#include <time.h>
-#include "opencv2/core.hpp"
-#include "opencv2/highgui.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/videoio.hpp"
-
-class MapUI {
-//  private:
-//   TrojanMap map;
-
- public:
-
-
-  // std::unordered_map<std::string, Node> data;
-  // Create the menu.
-  void PrintMenu();
-
-  // Create the Dynamic menu.
-  #ifdef NCURSES
-  void DynamicPrintMenu();
-  #endif
-  // Visualization
-  // Plot the map
-  void PlotMap();
-
-  // Given a location id, plot the point on the map.
-  void PlotPoint(std::string id);
-
-  // Given a lat and lon, plot the point on the map.
-  void PlotPoint(double lat, double lon);
-
-  // Given a vector of location ids draws the path (connects the points)
-  void PlotPath(std::vector<std::string> &location_ids);
-
-  // Given a vector of location ids draws the points on the map (no path).
-  void PlotPoints(std::vector<std::string> &location_ids);
-
-  // Given a vector of location ids draws the points on the map with path.
-  void PlotPointsandEdges(std::vector<std::string> &location_ids, std::vector<double> &square);
-
-  // Given a vector of location ids draws the points with their order on the map (no path).
-  void PlotPointsOrder(std::vector<std::string> &location_ids);
-
-  // Given a vector of location ids and origin, draws the points with their label.
-  void PlotPointsLabel(std::vector<std::string> &location_ids, std::string origin);
-
-  // Create the videos of the progress to get the path
-  void CreateAnimation(std::vector<std::vector<std::string>>, std::string);
-
-  // Given a vector of location ids draws the path (connects the points) and name
-  void PlotPathwithName(std::vector<std::string> &location_ids);
-
-  // Transform the location to the position on the map
-  std::pair<double, double> GetPlotLocation(double lat, double lon);
-
-
-
-// =============================================
-
-
- public:
-  // Constructor
-  TrojanMap() { CreateGraphFromCSVFile(); };
-
-  // A map of ids to Nodes.
-  std::unordered_map<std::string, Node> data; //node contains all the ids
-
-  //-----------------------------------------------------
-  // Read in the data
-  void CreateGraphFromCSVFile();
-
-  //-----------------------------------------------------
-  // TODO: Implement these functions and create unit tests for them:
-  // Get the Latitude of a Node given its id.
-  double GetLat(const std::string &id);
-
-  // Get the Longitude of a Node given its id.
-  double GetLon(const std::string &id);
-
-  // Get the name of a Node given its id.
-  std::string GetName(const std::string &id);
-
-  // Get the id given its name.
-  std::string GetID(const std::string &name);
-
-  // Get the neighbor ids of a Node.
-  std::vector<std::string> GetNeighborIDs(const std::string &id);
-
-  // Returns a vector of names given a partial name.
-  std::vector<std::string> Autocomplete(std::string name);
-
-  // GetAllCategories: Return all the possible unique location categories, i.e.
-  //  there should be no duplicates in the output.
-  std::vector<std::string> GetAllCategories();
-
-  std::vector<std::string> GetAllLocationsFromCategory(std::string category);
-
-  std::vector<std::string> GetLocationRegex(std::regex location);
-
-  // Returns lat and lon of the given the name.
-  std::pair<double, double> GetPosition(std::string name);
-
-  // Calculate location names' edit distance
-  int CalculateEditDistance(std::string, std::string);
-
-  // Find the closest name
-  std::string FindClosestName(std::string name);
-
-  // Get the distance between 2 nodes.
-  double CalculateDistance(const std::string &a, const std::string &b);
-
-  // Calculates the total path length for the locations inside the vector.
-  double CalculatePathLength(const std::vector<std::string> &path);
-
-  // Given the name of two locations, it should return the **ids** of the nodes
-  // on the shortest path.
-  std::vector<std::string> CalculateShortestPath_Dijkstra(
-      std::string location1_name, std::string location2_name);
-  std::vector<std::string> CalculateShortestPath_Bellman_Ford(
-      std::string location1_name, std::string location2_name);
-
-  // Given CSV filename, it read and parse locations data from CSV file,
-  // and return locations vector for topological sort problem.
-  std::vector<std::string> ReadLocationsFromCSVFile(
-      std::string locations_filename);
-
-  // Given CSV filenames, it read and parse dependencise data from CSV file,
-  // and return dependencies vector for topological sort problem.
-  std::vector<std::vector<std::string>> ReadDependenciesFromCSVFile(
-      std::string dependencies_filename);
-
-  // Given a vector of location names, it should return a sorting of nodes
-  // that satisfies the given dependencies.
-  std::vector<std::string> DeliveringTrojan(
-      std::vector<std::string> &location_names,
-      std::vector<std::vector<std::string>> &dependencies);
-
-  // Given a vector of location ids, it should reorder them such that the path
-  // that covers all these points has the minimum length.
-  // The return value is a pair where the first member is the total_path,
-  // and the second member is the reordered vector of points.
-  // (Notice that we don't find the optimal answer. You can return an estimated
-  // path.)
-  std::pair<double, std::vector<std::vector<std::string>>>
-  TravelingTrojan_Brute_force(std::vector<std::string> location_ids);
-
-  std::pair<double, std::vector<std::vector<std::string>>>
-  TravelingTrojan_Backtracking(std::vector<std::string> location_ids);
-
-  std::pair<double, std::vector<std::vector<std::string>>> TravelingTrojan_2opt(
-      std::vector<std::string> location_ids);
-
-  std::pair<double, std::vector<std::vector<std::string>>> TravelingTrojan_3opt(
-      std::vector<std::string> location_ids);
-
-  std::vector<std::string> TrojanPath(std::vector<std::string> &location_names);
-    
-  // Check whether the id is in square or not
-  bool inSquare(std::string id, std::vector<double> &square);
-
-  // Get the subgraph based on the input
-  std::vector<std::string> GetSubgraph(std::vector<double> &square);
-
-  // Given a subgraph specified by a square-shape area, determine whether there
-  // is a cycle or not in this subgraph.
-  bool CycleDetection(std::vector<std::string> &subgraph,
-                      std::vector<double> &square);
-
-  // Given a location id and k, find the k closest points on the map
-  std::vector<std::string> FindNearby(std::string, std::string, double, int);
   
-  // Takes in a vector of queries. Each query consists of a pair: <tank_capacity, [source, destination]>.
-  // Returns the result of each query in a vector.
-  std::vector<bool> Queries(const std::vector<std::pair<double, std::vector<std::string>>> &q);
+  var events = results._embedded.events;
+
+  console.log(events);
+  
+  var len = events.length;
+  if(len > 20){
+    len = 20;
+  }else{
+    len = events.length;
+  } 
+
+
+  for (let i = 0; i < len; i++) {
+    
+    // console.log(events[i]);
+
+    if(typeof events[i].dates.start.localTime === "undefined"){
+      var date = events[i].dates.start.localDate; 
+    }else{
+      var date = events[i].dates.start.localDate;
+      var time = events[i].dates.start.localTime;
+    }
+
+    if(typeof events[i].images === "undefined"){
+      var icon = ""; 
+    }else{
+      var icon = events[i].images[0].url;
+    }
+    
+    if(typeof events[i].name === "undefined"){
+      var event = "";
+
+    }else{
+      var event = events[i].name;
+
+    }
+  
+    if(typeof events[i].classifications === "undefined" || typeof events[i].classifications[0].genre ==="undefined"){
+      var genre = "";
+
+    }else{
+      var genre = events[i].classifications[0].genre.name;
+    }
+
+    if(typeof events[i]._embedded === "undefined" || typeof events[i]._embedded.venues === "undefined"){
+      var venue = "";
+
+    }else{
+      var venue = events[i]._embedded.venues[0].name;
+
+    }
+   
+
+    // var icon = events[i].images[0].url
+    // var event = events[i].name;
+    // var genre = events[i].classifications[0].genre.name;
+    // var venue = events[i]._embedded.venue[0].name;
+
+   
+    
+   // var eventId = results[i].id; 
+     var eventId = events[i].id; 
+    
+     console.log(venue);
+
+
+    
+     
+//   table += "<tr><td>" + date+'\n'+ time + "</td><td><img src='" + icon + "' /></td><td><div id='cell' onclick='searchEventDetail(\'${nowObject.id}\')'> + event + "</div></td><td>" + genre + "</td><td>" + venue + "</td></tr>";
+//onclick='searchEventDetail(\'${eventId}\')'
+   
+//table += `<tr><div class="inline-input" ><td><div> + date+"\n"+ time + '</div></td><td><div><img height="80px" width="auto" src=' + icon +' /></div></td><td><div id="cell" onclick="searchEventDetail(\'${eventId}\')">' + event + '</div></td><td><div>' + genre + '</div></td><td><div>' + venue + '</div></td></div></tr>`;
+     table += `<tr><div class="inline-input"><td><div>` + date+`\n`+time + `</div></td><td><div><img height="80px" width="auto" src=" ` + icon +`" /></div></td><td class="event_hover" ><div id="cell"  onclick="searchEventDetail(\'${eventId}\');">` + event + `</div></td><td><div>` + genre + `</div></td><td><div>` + venue + `</div></td></div></tr>`;
+
+
+     //var eventButton = document.getElementById("cell");
+    // eventButton.setAttribute("onclick", searchEventDetail("eventId")); 
+   // const venueDetail = document.getElementById("showVenueDetail").innerHTML;
+   // eventButton.setAttribute("onclick", remove(venueDetail)); 
+   // var div = td.querySelector("div");   
+   // div.onclick = function() {
+     //   document.getElementById("showVenueDetail").innerHTML = "";
+
+      //  };
+
+  }
+
+  table += "</table>";
+  document.getElementById("searchResults").innerHTML = table;
+
+  // 获取按钮元素
+  var headButtonEvent = document.getElementById('head_event');
+  var headButtonGenre = document.getElementById('head_genre');
+  var headButtonVenue = document.getElementById('head_venue');
+
+  // 添加点击事件监听器
+  headButtonEvent.onclick = renewTableForEvent;
+  headButtonGenre.onclick = renewTableForGenre;
+  headButtonVenue.onclick = renewTableForVenue;
+
+  //scroll to view
+  document.querySelector("#searchResults").style.display = 'block';
+  window.scrollTo({
+  top: document.querySelector("#searchResults").offsetTop,
+  behavior: 'smooth'
+ });
+
+
+}
+ 
+ //定义发送EVENT DETAIL的函数
+function searchEventDetail(eventId) {
+  
+
+  document.getElementById("showVenueDetail").innerHTML = "";
+
+
+  // 使用XMLHttpRequest发送GET请求
+    var xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function() {
+    if (this.readyState === 4 && this.status === 200) {
+      var response = JSON.parse(this.responseText);
+      jsonEvent = response;
+      // console.log(response);
+      displayEventDetails(response);
+      //scroll to bottom 
+   
+
+     
+    } else {
+      console.log("sorry,search event detail request failed. returned status of: " + xhr.status);
+    }
+  }; 
+    // xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.open("GET", "/event_detail?eventId=" + eventId, true);
+  
+  xhr.send();
+  
+}
 
 
 
 
-};
+function renewTableForEvent(){
 
-#endif
+  clearTable();
+  sort_event();
+  
+}
 
+function renewTableForGenre(){
+
+  clearTable();
+  sort_genre();
+  
+}
+
+function renewTableForVenue(){
+
+  clearTable();
+  sort_venue();
+  
+}
+
+function clearTable(){
+   document.getElementById('table').innerHTML="";
+  
+
+ }
+
+function sort_event() {
+    
+ const events = jsonArray._embedded.events;
+
+    
+  if (sort_incending_event == 1) {
+    sort_incending_event = 0;
+    events.sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+    // console.log('jsonArray+'+jsonArray);
+    displaySearchResults(jsonArray);
+    
+  } else {
+    sort_incending_event = 1;
+    events.sort(function (a, b) {
+      return b.name.localeCompare(a.name);
+    });
+    // console.log('jsonArray+'+jsonArray);
+    
+    displaySearchResults(jsonArray)
+  }
+}
+
+function sort_genre() {
+    
+ const events = jsonArray._embedded.events;
+
+    
+  if (sort_incending_genre == 1) {
+    sort_incending_genre = 0;
+    events.sort(function (a, b) {
+      return a.classifications[0].genre.name.localeCompare(b.classifications[0].genre.name);
+    });
+    // console.log('jsonArray+'+jsonArray);
+    displaySearchResults(jsonArray);
+    
+  } else {
+    sort_incending_genre = 1;
+    events.sort(function (a, b) {
+      return b.classifications[0].genre.name.localeCompare(a.classifications[0].genre.name);
+    });
+    // console.log('jsonArray+'+jsonArray);
+    displaySearchResults(jsonArray);
+  }
+}
+
+
+function sort_venue() {
+  
+ const events = jsonArray._embedded.events;
+
+  if (sort_incending_venue == 1) {
+    sort_incending_venue = 0;
+    events.sort(function (a, b) {
+      return a._embedded.venues[0].name.localeCompare(b._embedded.venues[0].name);
+    });
+    // console.log('jsonArray+'+jsonArray);
+    displaySearchResults(jsonArray);
+    
+  } else {
+    sort_incending_venue = 1;
+    events.sort(function (a, b) {
+      return b._embedded.venues[0].name.localeCompare(a._embedded.venues[0].name);
+    });
+    
+    displaySearchResults(jsonArray);
+  }
+}
+
+function displayEventDetails(result) {
+
+  document.getElementById("showVenueDetail_notice").innerHTML = "";
+  document.getElementById("arrow").innerHTML = "";
+  document.getElementById("eventDetailResults").innerHTML = "";
+
+ 
+  console.log(result); 
+
+  // extract event detail elements
+        var eventName = result.name;
+
+        if(typeof result.dates.start.localTime == "undefined"){
+          var date_time = result.dates.start.localDate;
+        }else{
+          var date_time = result.dates.start.localDate +' '+ result.dates.start.localTime;         
+        }
+
+        if(typeof result._embedded.attractions  !== "undefined" ){
+          var artist_team = result._embedded.attractions[0].name ;
+          var artist_team_url =  result._embedded.attractions[0].url ;
+          var Artist_Team = "Artist/Team";
+          var exist_art = "exist";
+        }else {
+          var artist_team = '';
+          var artist_team_url =  '';
+          var Artist_Team = '';
+          var exist_art = '';
+
+        }
+
+        if(typeof result._embedded.venues !== "undefined"){
+          var venue = result._embedded.venues[0].name;
+          var Venue = "Venue" ;
+        }else {
+           var venue = '';
+           var Venue = '' ;
+        }
+
+        if(typeof result.classifications[0].subGenre !== "undefined" && result.classifications[0].subGenre.name !== "Undefined" ){
+          var subGenre = result.classifications[0].subGenre.name;
+        }else{
+          var subGenre = '';  
+        }
+
+        if(typeof result.classifications[0].genre == "undefined" ||  result.classifications[0].genre.name == "Undefined"){
+           
+            var genre = '';      
+        }else if(typeof  result.classifications[0].genre !== "undefined" && result.classifications[0].subGenre == "undefined" ){
+          var genre = result.classifications[0].genre.name;
+        }else{
+          var genre = " | " + result.classifications[0].genre.name;
+        }
+
+        if(typeof result.classifications[0].segment == "undefined" ||  result.classifications[0].segment.name == "Undefined"){
+         
+          var segment = ''; 
+        }else if(typeof result.classifications[0].segment !== "undefined" && result.classifications[0].subGenre == "undefined" && result.classifications[0].genre == "undefined" ){
+          var segment = result.classifications[0].segment.name;
+        }else{
+          var segment = " | " + result.classifications[0].segment.name;
+        }
+
+        if(typeof result.classifications[0].subType == "undefined" ||  result.classifications[0].subType.name == "Undefined"){
+                 var subType = '';
+        }else if(typeof result.classifications[0].subType !== "undefined" && result.classifications[0].subGenre == "undefined" && result.classifications[0].genre == "undefined" && result.classifications[0].segment == "undefined"){
+          var subType = result.classifications[0].subType.name;
+                    
+        }else{
+          var subType = " | " + result.classifications[0].subType.name;
+
+        }
+
+        
+
+        if(typeof result.classifications[0].type == "undefined" ||  result.classifications[0].type.name == "Undefined"){
+          var type = '';
+
+        }else if(typeof result.classifications[0].type !== "undefined" && typeof result.classifications[0].subType == "undefined" && result.classifications[0].subGenre == "undefined" && result.classifications[0].genre == "undefined" && result.classifications[0].segment == "undefined"){
+          var type = result.classifications[0].type.name;
+       
+        }else{
+          var type = " | " + result.classifications[0].type.name;
+          
+        }
+
+        if(typeof result.classifications[0].subGenre !== "undefined" ||result.classifications[0].genre !== "undefined"||result.classifications[0].segment !== "undefined"||result.classifications[0].subType !== "undefined"||result.classifications[0].type !== "undefined" ){
+          var genre_total = subGenre + genre + segment + subType + type ;
+          var Genre = "Genre";
+        }else{
+          var genre_total = '';
+          var Genre = '';
+        }
+
+        if(typeof result.priceRanges !== "undefined"){
+          var priceRanges_min = result.priceRanges[0].min;
+          
+
+        }else{
+          var priceRanges_min = '';
+           
+        }
+
+        if(typeof result.priceRanges !== "undefined"){
+          var priceRanges_max = result.priceRanges[0].max;
+
+        }else{
+          var priceRanges_max = '';
+       
+        }
+
+        if(typeof result.priceRanges !== "undefined"){
+          var priceRanges = priceRanges_min+" - "+priceRanges_max;
+          var PriceRanges = "Price Ranges";
+          var exist_price="exist";
+
+        }else{
+          var priceRanges = '';
+          var PriceRanges = ''; 
+          var exist_price = '';  
+        }
+
+        if(typeof result.dates.status.code == "undefined"){
+         // var ticketStatus = result.dates.status.code;
+         var ticketStatus = '';
+         var TicketStatus = '';
+         var className = '';
+
+         
+        }else{
+          
+          
+
+          if(result.dates.status.code == "onsale"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "On Sale";
+            var className = "onsale";
+          }else if(result.dates.status.code == "rescheduled"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "Rescheduled";
+            var className = "rescheduled";
+          }else if(result.dates.status.code == "offsale"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "Off sale";
+            var className = "offsale";
+          }else if(result.dates.status.code == "canceled"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "Canceled";
+            var className = "canceled";
+          }else if(result.dates.status.code == "postponed"){
+            var TicketStatus = "Ticket Status";
+            var ticketStatus = "Postponed";
+            var className = "postponed";
+          }
+         
+      
+        }
+
+        if(typeof result.url !== "undefined"){
+          var buyTicket_at = result.url;
+          var BuyTicketAt = "Buy Ticket At";
+        }else{
+          var buyTicket_at = '';
+          var BuyTicketAt = '';
+        }
+
+        if(typeof result.seatmap.staticUrl !== "undefined"){
+          var seatMap= result.seatmap.staticUrl;
+
+
+        }else{
+          var seatMap= '';
+
+       
+        }
+       
+       
+      
+
+        
+       
+        // display event detail        
+ var eventDetailResults = 
+
+           `<div class="eventDetail_window">
+           <div class="event_head" >`+eventName+`</div>
+          
+           <div class="inline-input" >
+            <div class="div_left">
+                <div>
+                  <div><h4>Date</h4></div>
+                  <div><p>`+date_time+`</p></div>
+                </div>
+                
+                <div>
+                <div class=`+exist_art+`><h4>`+Artist_Team+`</h4></div>
+                <div><p><a href=" ` +artist_team_url+ ` " target="_blank" class="hover">`+artist_team+`</a></p></div>
+                
+                </div>
+
+              <div>
+                <div><h4>`+Venue+`<h4></div>
+                <div><p>`+venue+`</p></div>
+              </div>
+
+              <div>
+                <div><h4>`+Genre+`</h4></div>
+                <div><p>`+genre_total+`</p></div>
+              </div>
+
+              <div>
+                <div class=`+exist_price+`><h4>`+PriceRanges+`</h4></div>
+                <div><p>`+ priceRanges+`</p></div>
+              </div>
+
+              <div>
+                <div><h4>`+TicketStatus+`</h4></div>
+                <div><p class=`+className+`>`+ticketStatus+`</p></div>
+              </div>
+
+              <div>
+                 <div><h4>`+BuyTicketAt+`<h4></div>
+                <div><p><a href=" ` +buyTicket_at+ ` " target="_blank" class="hover">Ticketmaster</a></p></div>
+              </div>
+            </div>
+
+            <div class="div_right">
+              <div class="event_img"><img src=" ` +seatMap+ ` " height="320" width="350"/></div>
+            </div>
+        
+          </div>
+          </div>`;
+        
+    
+
+
+        document.getElementById("eventDetailResults").innerHTML = eventDetailResults;
+
+            // 获取所有的 <p> 和 <h> 元素
+            var elements = document.querySelectorAll('p, h1, h2, h3, h4');
+
+            // 循环遍历每个元素
+            for (var i = 0; i < elements.length; i++) {
+              var element = elements[i];
+        
+            // 判断元素内容是否为空
+              if (element.innerHTML.trim() === '') {
+          
+            // 如果内容为空，则删除元素
+             element.parentNode.removeChild(element);
+             }
+            }
+
+       //add show venue detail notice
+    const venueDetailNotice = document.createElement("div");
+    venueDetailNotice.innerHTML = "Show Venue Details";
+    document.getElementById("showVenueDetail_notice").appendChild(venueDetailNotice);
+      //add downward arrow       
+    const arrow = document.createElement("div");
+    arrow.className = "arrow";
+
+
+   document.getElementById("arrow").appendChild(arrow);
+
+   //scroll to view
+    document.querySelector("#eventDetailResults").style.display = 'block';
+    window.scrollTo({
+    top: document.querySelector("#eventDetailResults").offsetTop,
+    behavior: 'smooth'
+  });
+
+  arrow.onclick = function() { searchVenueDetails(venue,venueDetailNotice,arrow,); };
+        
+}
+
+
+
+
+function searchVenueDetails(venue, venueDetailNotice, arrow){
+  
+  
+  //get request to google map api
+  var xhr = new XMLHttpRequest();
+  // console.log(venue);
+
+  xhr.onreadystatechange = function() {
+  if (this.readyState === 4 && this.status === 200) {
+    var response = JSON.parse(this.responseText);
+   // jsonEvent = response;
+    // console.log(response);
+     //hide the two div elements
+     venueDetailNotice.remove();
+     arrow.remove();
+    displayVenueDetails(response);
+    //scroll to expand, and we add class="expanded" in the div
+   
+   
+  } else {
+    console.log("sorry, search venue detail request failed. returned status of: " + xhr.status);
+  }
+}; 
+  // xhr.setRequestHeader("Content-Type", "application/json");
+xhr.open("GET", "/venue_detail?venue=" + venue, true);
+
+xhr.send();
+  
+}
+
+function displayVenueDetails(result){
+
+  var venueName = result._embedded.venues[0].name;
+
+  document.getElementById("showVenueDetail_notice").innerHTML=""
+  document.getElementById("arrow").innerHTML=""
+
+  if(typeof result._embedded.venues[0].address  !== "undefined" ){
+  
+  var address = result._embedded.venues[0].address.line1;
+
+  }else {
+  var address = '';
+  }
+
+  if(typeof result._embedded.venues[0].city  !== "undefined" ){
+  
+    var city = result._embedded.venues[0].city.name;
+
+    }else {
+    var city = '';
+    }
+   
+  if(typeof result._embedded.venues[0].state !== "undefined" ){
+  
+    var stateCode = result._embedded.venues[0].state.stateCode;
+ 
+    }else {
+      var stateCode = '';
+    }  
+  
+  if(typeof result._embedded.venues[0].postalCode !== "undefined" ){
+  
+      var postalCode = result._embedded.venues[0].postalCode;
+    
+    }else {
+        var postalCode = '';
+      }
+      
+  
+     
+  if(typeof result._embedded.venues[0].url !== "undefined" ){
+  
+    var upcomingEvents = result._embedded.venues[0].url;
+    var upcoming_msg = "More events at this venue";
+
+  }else {
+    var upcomingEvents = '';
+    var upcoming_msg = "N/A";
+
+   }  
+   
+   var map_url = "https://www.google.com/maps/search/?api=1&query="+address+"%2C"+city+"%2C"+stateCode+"%2C"+postalCode
+
+   //display venue details in webpage
+  var venueDetail=
+
+  `<div class="venue_detail_window"><div class="black-border"><div><h3 class="venue_name">`+venueName+`</h3></div>
+   
+
+   
+<div class="inline-input" id="parent">
+
+
+  <div class="child_left">
+
+    <div class="inline-input" id="top">
+      <div class="address_head">Address:</div>
+      <div class="address_data"><p class="address">`+address+`<br>`+city+", "+stateCode+`<br>`+postalCode+`</div>
+    </div>
+
+    <div id="bottom"><a href=" `+map_url+ ` " target="_blank" class="hover">Open in Google Maps</a></div>
+
+  </div>
+
+  <div class="divided"></div>
+
+     <div class="child_right">
+      <div class="upcoming"><a href=" ` +upcomingEvents+ ` " target="_blank" class="hover">`+upcoming_msg+`</a></div>
+      
+    </div>
+  
+</div>
+</div>
+</div>`;
+
+document.getElementById("showVenueDetail").innerHTML = venueDetail;
+
+document.querySelector("#showVenueDetail").style.display = 'block';
+window.scrollTo({
+top: document.querySelector("#showVenueDetail").offsetTop,
+behavior: 'smooth'
+});
+
+
+}
+
+ 
